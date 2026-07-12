@@ -1,3 +1,4 @@
+import { useState } from 'react'
 
 const SECTIONS = [
     'Data',
@@ -12,9 +13,9 @@ export default function Sidebar() {
         <aside class="right-sidebar">
             {SECTIONS.map((section) => (
                 <button
-                    key={section.id}
-                    onClick={() => handleChangeSection(section.id)}
-                >{section.label}</button>
+                    key={section}
+                    onClick={() => handleChangeSection(section)}
+                >{section}</button>
             ))}
         </aside>
     )
