@@ -24,6 +24,25 @@ export default function MapDisplay() {
         previousY = localY
     }
 
+    const updateZooming = (e) => {
+        const oldScale = viewportTransform.scale
+        const oldX = viewportTransform.x
+        const oldY = viewportTransform.y
+
+        const localX = e.clientX
+        const localY = e.clientY
+
+        const previousScale = viewportTransform.scale
+        const newScale = (viewportTransform.scale += e.deltaY * -0.01)
+
+        const newX = localX - (localX - oldX) * (newScale / previousScale)
+        const newY = localY- (localY - oldY) * (newScale / previousScale)
+
+        viewportTransform.x = newX
+        viewportTransform.y = newY
+        viewportTransform.scale = newScale
+    }
+
     const render = () => {
         ctx.setTransform(1, 0, 0, 1, 0, 0)
         ctx.setTransform(
@@ -35,9 +54,14 @@ export default function MapDisplay() {
             y
         )
 
+    // Event listeners for pan/zoom
     const onMouseMove = (e) => {
         render()
-
+        console.log(e)
+    }
+    const onMouseWheel = (e) => {
+        updateZooming(e)
+        render()
         console.log(e)
     }
 
@@ -51,6 +75,8 @@ export default function MapDisplay() {
     canvas.addEventListener('mouseup', (e) => {
         canvas.removeEventListener('mousemove', onMouseMove)
     })
+
+    canvas.addEventListener('wheel', onMouseWheel)
     
     return (
         <canvas
