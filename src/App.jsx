@@ -1,4 +1,7 @@
 import { useState } from 'react'
+import MapDisplay from "./components/MapDisplay";
+import Toolbar from "./components/Toolbar";
+import Sidebar from "./components/Sidebar";
 import './App.css'
 
 function App() {
@@ -12,15 +15,11 @@ function App() {
         <p>made by GreenieGuest</p>
       </header>
       <div class="content-wrapper">
-        <aside class="left-sidebar">
-          <h3>Tools & Data</h3>
-        </aside>
+        <Toolbar/>
         <main>
-          <p>Map will go here</p>
+          <MapDisplay/>
         </main>
-        <aside class="right-sidebar">
-          <h3>Tools & Data</h3>
-        </aside>
+        <Sidebar/>
       </div>
     </>
   )
