@@ -19,15 +19,20 @@ aside {
   width: 200px;
 }
 
+.content-wrapper {
+  display: flex;
+  flex: 1;
+}
+
 .left-sidebar {
   border-right: 1px solid #000;
 }
 
 .right-sidebar {
-  border-right: 1px solid #000;
+  border-left: 1px solid #000;
 }
 
 main {
   flex: 1;
-  padding: 20px;
+  position: relative;
 }
