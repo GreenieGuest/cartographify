@@ -1,6 +1,9 @@
-export default function Toolbar() {
+import { useState } from 'react'
 
-    const VIEWS = [
+export default function Toolbar() {
+    const [currentMapMode, setCurrentMapMode] = useState('default')
+
+    const MAP_MODES = [
         { id: 'default', label: 'Default (Location)'},
         { id: 'assigned', label: 'Assigned'},
         { id: 'tradeGood', label: 'Trade Goods'},
@@ -23,7 +26,13 @@ export default function Toolbar() {
 
     return (
         <aside class="left-sidebar">
-          <h3>Tools & Data</h3>
+            <h2>Map Modes</h2>
+            {MAP_MODES.map((section) => (
+                <button
+                    key={section.id}
+                    onClick={() => setCurrentMapMode(section.id)}
+                >{section.label}</button>
+            ))}
         </aside>
     )
 }
