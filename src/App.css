@@ -11,6 +11,18 @@ body {
   min-height: 100vh;
 }
 
+button {
+  background-image: linear-gradient(LightSeaGreen, teal);
+  color: #fff;
+  padding: 5px 10px;
+  border-width: 2px 2px 2px 2px;
+  border-radius: 15px 15px 15px 15px;
+  cursor: pointer;
+  transition: background-color .3s ease;
+  font-style: italic;
+  text-shadow: 1px 1px 2px gray;
+}
+
 header {
   background-color: chartreuse;
 }
