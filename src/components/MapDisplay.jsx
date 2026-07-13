@@ -2,7 +2,7 @@ import { useRef } from 'react'
 
 export default function MapDisplay() {
 
-    const canvas = useRef(null);
+    const mapcanvas = useRef(null);
     const ctx = canvas.getContext('2d')
 
     const viewportTransform = {
@@ -53,6 +53,7 @@ export default function MapDisplay() {
             x,
             y
         )
+    }
 
     // Event listeners for pan/zoom
     const onMouseMove = (e) => {
@@ -79,7 +80,7 @@ export default function MapDisplay() {
     canvas.addEventListener('wheel', onMouseWheel)
     
     return (
-        <canvas
+        <canvas ref={mapcanvas}
         />
     )
 }
