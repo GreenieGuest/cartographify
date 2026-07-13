@@ -25,7 +25,7 @@ export default function Toolbar() {
     ]
 
     return (
-        <aside class="left-sidebar">
+        <aside className="left-sidebar">
             <h2>Map Modes</h2>
             {MAP_MODES.map((section) => (
                 <button

@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 
 export default function MapDisplay() {
     const mapcanvas = useRef(null);
@@ -29,7 +29,6 @@ export default function MapDisplay() {
         })
     }
     const handleMouseWheel = (e) => {
-        e.preventDefault();
         const mouseX = e.clientX;
         const mouseY = e.clientY;
 

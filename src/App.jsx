@@ -8,7 +8,7 @@ import './App.css'
 
 function App() {
   const uploadMapButton = useRef(null);
-  const { mapImage, loadMapImage } = useMapStore()
+  const { mapImage, setMapImage } = useMapStore()
 
   const handleMapUpload = (e) => {
     const file = e.target.files[0];
@@ -18,7 +18,7 @@ function App() {
       reader.onload = (event) => {
         const image = new Image()
         image.onload = () => {
-          loadMapImage(image)
+          setMapImage(image)
         }
         image.onerror = (event) => {
           console.log("Map failed to upload")
@@ -31,9 +31,9 @@ function App() {
   }
 
   return (
-    <>
+    <div className="shell">
       <header>
-        <h1><FaMapLocationDot class="logo"/>Cartographify (WIP)</h1>
+        <h1><FaMapLocationDot className="logo"/>Cartographify (WIP)</h1>
         <p>visualize your map for eu5 or for other purposes</p>
         <p>made by GreenieGuest</p>
         <button onClick={()=>uploadMapButton.current?.click()}>
@@ -42,14 +42,14 @@ function App() {
         <input type="file" ref={uploadMapButton} accept="image/*" style={{display: 'none'}} onChange={handleMapUpload}/>
         
       </header>
-      <div class="content-wrapper">
+      <div className="content-wrapper">
         <Toolbar/>
         <main>
           <MapDisplay/>
         </main>
         <Sidebar/>
       </div>
-    </>
+    </div>
   )
 }
 
