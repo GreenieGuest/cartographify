@@ -1,86 +1,60 @@
 import { useRef } from 'react'
 
 export default function MapDisplay() {
-
     const mapcanvas = useRef(null);
-    const ctx = canvas.getContext('2d')
 
-    const viewportTransform = {
-        x: 0,
-        y: 0,
-        scale: 1
-    }
-
-    let previousX = 0, previousY = 0
-
-    const updatePanning = (e) => {
-        const localX = e.clientX
-        const localY = e.clientY
-
-        viewportTransform.x += localX - previousX
-        viewportTransform.y += localY - previousY
-
-        previousX = localX
-        previousY = localY
-    }
-
-    const updateZooming = (e) => {
-        const oldScale = viewportTransform.scale
-        const oldX = viewportTransform.x
-        const oldY = viewportTransform.y
-
-        const localX = e.clientX
-        const localY = e.clientY
-
-        const previousScale = viewportTransform.scale
-        const newScale = (viewportTransform.scale += e.deltaY * -0.01)
-
-        const newX = localX - (localX - oldX) * (newScale / previousScale)
-        const newY = localY- (localY - oldY) * (newScale / previousScale)
-
-        viewportTransform.x = newX
-        viewportTransform.y = newY
-        viewportTransform.scale = newScale
-    }
-
-    const render = () => {
-        ctx.setTransform(1, 0, 0, 1, 0, 0)
-        ctx.setTransform(
-            viewportTransform.scale,
-            0,
-            0,
-            viewportTransform.scale,
-            x,
-            y
-        )
-    }
+    // pan/zoom variables
+    const [pan, setPan] = useState({ x: 0, y: 0 })
+    const [zoom, setZoom] = useState(1)
+    const zoomIntensity = useRef(0.1)
+    const isPanning = useRef(false)
+    const [lastMouse, setLastMouse] = useState({ x: 0, y: 0 })
 
     // Event listeners for pan/zoom
-    const onMouseMove = (e) => {
-        render()
-        console.log(e)
-    }
-    const onMouseWheel = (e) => {
-        updateZooming(e)
-        render()
-        console.log(e)
+    const handleMouseDown = (e) => {
+        isPanning.current = true;
+        setLastMouse({
+            x: e.clientX - pan.x,
+            y: e.clientY - pan.y
+        })
     }
 
-    canvas.addEventListener('mousedown', (e) => {
-        previousX = e.clientX
-        previousY = e.clientY
+    const handleMouseUp = (e) => { isPanning.current = false }
 
-        canvas.addEventListener('mousemove', onMouseMove)
-    })
+    const handleMouseMove = (e) => {
+        if (!isPanning) return;
+        setPan({
+            x: e.clientX - lastMouse.x,
+            y: e.clientY - lastMouse.y
+        })
+    }
+    const handleMouseWheel = (e) => {
+        e.preventDefault();
+        const mouseX = e.clientX;
+        const mouseY = e.clientY;
 
-    canvas.addEventListener('mouseup', (e) => {
-        canvas.removeEventListener('mousemove', onMouseMove)
-    })
+        let newZoom = e.deltaY < 0 ? zoom + zoomIntensity : zoom - zoomIntensity;
+        newZoom = Math.min(Math.max(.5, newZoom), 5);
 
-    canvas.addEventListener('wheel', onMouseWheel)
+        // zoom towards cursor position
+
+        const factor = newZoom - zoom;
+        setPan({
+            x: pan.x - (mouseX * factor),
+            y: pan.y - (mouseY * factor)
+        });
+        setZoom(newZoom);
+    }
     
     return (
-        <canvas ref={mapcanvas}
+        <canvas
+            ref={mapcanvas}
+            style={{width: '100%', height: '100%'}}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseUp}
+            onWheel={handleMouseWheel}
         />
     )
 }

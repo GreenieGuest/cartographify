@@ -63,4 +63,5 @@ aside {
 main {
   flex: 1;
   position: relative;
+  background-image: "./assets/checker.png"
 }

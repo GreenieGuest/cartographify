@@ -1,4 +1,4 @@
-import { use, useState } from 'react'
+import { use, useRef, useState } from 'react'
 import MapDisplay from "./components/MapDisplay";
 import Toolbar from "./components/Toolbar";
 import Sidebar from "./components/Sidebar";
@@ -39,7 +39,7 @@ function App() {
         <button onClick={()=>uploadMapButton.current?.click()}>
           Upload Map Image
         </button>
-        <input type="file" ref="uploadMapButton" accept="image/*" style={{display: 'none'}} onChange={handleMapUpload}/>
+        <input type="file" ref={uploadMapButton} accept="image/*" style={{display: 'none'}} onChange={handleMapUpload}/>
         
       </header>
       <div class="content-wrapper">
