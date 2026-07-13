@@ -1,7 +1,9 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { useMapStore } from "../store/mapStore";
 
 export default function MapDisplay() {
     const mapcanvas = useRef(null);
+    const { mapImage } = useMapStore()
 
     // pan/zoom variables
     const [pan, setPan] = useState({ x: 0, y: 0 })
@@ -9,6 +11,24 @@ export default function MapDisplay() {
     const zoomIntensity = useRef(0.1)
     const isPanning = useRef(false)
     const [lastMouse, setLastMouse] = useState({ x: 0, y: 0 })
+
+    // image loader (from mapImage upload button)
+    useEffect(() => {
+        if (!mapImage) return;
+        const canvas = mapcanvas.current;
+        const ctx = canvas.getContext('2d');
+        ctx.save()
+        ctx.setTransform(1, 0, 0, 1, 0, 0)
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        ctx.translate(pan.x, pan.y)
+        ctx.scale(zoom, zoom)
+
+        ctx.drawImage(mapImage, 0, 0);
+        ctx.restore()
+    },[mapImage, pan, zoom])
+
+    // [[ M O U S E   L I S T E N E R S ]]
 
     // Event listeners for pan/zoom
     const handleMouseDown = (e) => {

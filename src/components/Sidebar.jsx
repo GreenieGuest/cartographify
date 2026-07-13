@@ -14,9 +14,10 @@ export default function Sidebar() {
             {SECTIONS.map((section) => (
                 <button
                     key={section}
-                    onClick={() => handleChangeSection(section)}
+                    onClick={() => setCurrentSection(section)}
                 >{section}</button>
             ))}
+            <h1>{currentSection}</h1>
         </aside>
     )
 }
