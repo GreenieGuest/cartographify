@@ -3,6 +3,7 @@ import { useMapStore } from "../store/mapStore";
 
 export default function MapDisplay() {
     const mapcanvas = useRef(null);
+    const canvasContainer = useRef(null);
     const { mapImage } = useMapStore()
 
     // pan/zoom variables
@@ -12,8 +13,8 @@ export default function MapDisplay() {
     const isPanning = useRef(false)
     const [lastMouse, setLastMouse] = useState({ x: 0, y: 0 })
 
-    // image loader (from mapImage upload button)
-    useEffect(() => {
+    // Draw function for canvas (call each time pan/zoom/window resizes)
+    const draw = (e) => {
         if (!mapImage) return;
         const canvas = mapcanvas.current;
         const ctx = canvas.getContext('2d');
@@ -26,7 +27,13 @@ export default function MapDisplay() {
 
         ctx.drawImage(mapImage, 0, 0);
         ctx.restore()
-    },[mapImage, pan, zoom])
+    }
+
+    useEffect(() => {
+        const resizeObserver = new ResizeObserver(() => draw());
+        if (canvasContainer.current) {resizeObserver.observe(canvasContainer.current)}
+        return () => resizeObserver.disconnect()
+    }, [pan, zoom, mapImage])
 
     // [[ Helper functions ]]
 
@@ -77,14 +84,16 @@ export default function MapDisplay() {
     }
     
     return (
-        <canvas
-            ref={mapcanvas}
-            style={{width: '100%', height: '100%', touchAction: "none"}}
-            onMouseDown={handleMouseDown}
-            onMouseMove={handleMouseMove}
-            onMouseUp={handleMouseUp}
-            onMouseLeave={handleMouseUp}
-            onWheel={handleMouseWheel}
-        />
+        <div className='canvas-container' ref={canvasContainer}>
+            <canvas
+                ref={mapcanvas}
+                style={{width: '100%', height: '100%', touchAction: "none"}}
+                onMouseDown={handleMouseDown}
+                onMouseMove={handleMouseMove}
+                onMouseUp={handleMouseUp}
+                onMouseLeave={handleMouseUp}
+                onWheel={handleMouseWheel}
+            />
+        </div>
     )
 }
