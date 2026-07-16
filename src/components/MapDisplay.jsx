@@ -28,6 +28,13 @@ export default function MapDisplay() {
         ctx.restore()
     },[mapImage, pan, zoom])
 
+    // [[ Helper functions ]]
+
+    const getRectXY = (e) => {
+        const rect = mapcanvas.current.getBoundingClientRect();
+        return { rx: (e.clientX - rect.left), ry: (e.clientY - rect.top)  }
+    }
+
     // [[ M O U S E   L I S T E N E R S ]]
 
     // Event listeners for pan/zoom

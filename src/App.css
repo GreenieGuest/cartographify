@@ -73,7 +73,7 @@ main {
   flex: 1;
   position: relative;
   overflow: hidden;
-  background-image: "./assets/checker.png"
+  background-color: blue;
 }
 
 canvas {
