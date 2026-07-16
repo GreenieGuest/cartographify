@@ -40,10 +40,11 @@ export default function MapDisplay() {
     }
 
     useEffect(() => {
+        draw();
         const resizeObserver = new ResizeObserver(() => draw());
         if (canvasContainer.current) {resizeObserver.observe(canvasContainer.current)}
         return () => resizeObserver.disconnect()
-    }, [pan, zoom, mapImage])
+    }, [mapImage])
 
     // [[ Helper functions ]]
 
