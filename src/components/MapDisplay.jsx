@@ -17,7 +17,15 @@ export default function MapDisplay() {
     const draw = (e) => {
         if (!mapImage) return;
         const canvas = mapcanvas.current;
+        const container = canvasContainer.current;
+        if (!canvas || !container) return;
         const ctx = canvas.getContext('2d');
+        
+        const cx = container.clientWidth;
+        const cy = container.clientHeight;
+        if (canvas.height !== cy) canvas.height = cy;
+        if (canvas.width !== cx) canvas.width = cx;
+
         ctx.save()
         ctx.imageSmoothingEnabled = false;
         ctx.setTransform(1, 0, 0, 1, 0, 0)
