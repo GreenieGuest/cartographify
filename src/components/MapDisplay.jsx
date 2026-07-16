@@ -13,6 +13,8 @@ export default function MapDisplay() {
     const isPanning = useRef(false)
     const lastMouse = useRef({ x: 0, y: 0 })
 
+    const [displayedCoords, setDisplayedCoords] = useState({ x: 0, y: 0 });
+
     // Draw function for canvas (call each time pan/zoom/window resizes)
     const draw = (e) => {
         if (!mapImage) return;
@@ -35,7 +37,6 @@ export default function MapDisplay() {
         ctx.scale(zoom.current, zoom.current)
 
         ctx.drawImage(mapImage, 0, 0);
-        console.log(pan.current, zoom.current)
         ctx.restore()
     }
 
@@ -53,6 +54,13 @@ export default function MapDisplay() {
         return { rx: (e.clientX - rect.left), ry: (e.clientY - rect.top)  }
     }
 
+    const getImageCoords = (cx, cy) => {
+        return {
+            x: Math.floor((cx - pan.current.x) / zoom.current),
+            y: Math.floor((cy - pan.current.y) / zoom.current),
+        }
+    }
+
     // [[ M O U S E   L I S T E N E R S ]]
 
     // Event listeners for pan/zoom
@@ -67,6 +75,14 @@ export default function MapDisplay() {
     const handleMouseUp = (e) => { isPanning.current = false }
 
     const handleMouseMove = (e) => {
+        // Show coordinates at bottom of screen
+        const { rx, ry } = getRectXY(e)
+        const { x: ix, y: iy } = getImageCoords(rx, ry)
+        setDisplayedCoords({
+            x: ix,
+            y: iy
+        })
+
         if (!isPanning.current) return;
         pan.current = {
             x: e.clientX - lastMouse.current.x,
@@ -104,6 +120,7 @@ export default function MapDisplay() {
                 onMouseLeave={handleMouseUp}
                 onWheel={handleMouseWheel}
             />
+            <p className='coords'>Coords: ({displayedCoords.x}, {displayedCoords.y})</p>
         </div>
     )
 }
