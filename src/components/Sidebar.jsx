@@ -58,12 +58,12 @@ function LayersPanel() {
                     </div>
                     <div className="layer-setting">
                         <label>X-Offset</label>
-                        <input type='range' value={layer.offset.x} min={-mapImage.width} max={mapImage.width} step='1' onChange={(e)=>updateLayer(layer.key, { offset: { x: Number(e.target.value), y: layer.offset.y}})}/>
+                        <input type='range' value={layer.offset.x} min={mapImage ? -mapImage.width : -1024} max={mapImage ? mapImage.width : 1024} step='1' onChange={(e)=>updateLayer(layer.key, { offset: { x: Number(e.target.value), y: layer.offset.y}})}/>
                         <input className="alt-setting" type='number' value={layer.offset.x} onChange={(e)=>updateLayer(layer.key, { offset: { x: Number(e.target.value), y: layer.offset.y}})}/>
                     </div>
                     <div className="layer-setting">
                         <label>Y-Offset</label>
-                        <input type='range' value={layer.offset.y} min={-mapImage.height} max={mapImage.height} step='1' onChange={(e)=>updateLayer(layer.key, { offset: { x: layer.offset.x, y: Number(e.target.value)}})}/>
+                        <input type='range' value={layer.offset.y} min={mapImage ? -mapImage.height : -1024} max={mapImage ? mapImage.height : 1024} step='1' onChange={(e)=>updateLayer(layer.key, { offset: { x: layer.offset.x, y: Number(e.target.value)}})}/>
                         <input className="alt-setting" type='number' value={layer.offset.y} onChange={(e)=>updateLayer(layer.key, { offset: { x: layer.offset.x, y: Number(e.target.value)}})}/>
                     </div>
                 </div>
