@@ -56,7 +56,7 @@ export default function MapDisplay() {
         const resizeObserver = new ResizeObserver(() => draw());
         if (canvasContainer.current) {resizeObserver.observe(canvasContainer.current)}
         return () => resizeObserver.disconnect()
-    }, [mapImage])
+    }, [mapImage, layers])
 
     // [[ Helper functions ]]
 

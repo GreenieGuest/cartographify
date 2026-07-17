@@ -10,7 +10,7 @@ const SECTIONS = [
 // Layers Panel
 function LayersPanel() {
     const uploadMapButton = useRef(null);
-    const { layers, addLayer, removeLayer } = useMapStore()
+    const { mapImage, layers, addLayer, removeLayer, updateLayer } = useMapStore()
 
     const handleMapUpload = (e) => {
         const file = e.target.files[0];
@@ -41,9 +41,31 @@ function LayersPanel() {
             </button>
             <input type="file" ref={uploadMapButton} accept="image/*" style={{display: 'none'}} onChange={handleMapUpload}/>
             {layers.map((layer, index) => (
-                <div key={layer.key}>
-                    <p>Layer {layer.num}</p>
-                    <button onClick={()=>removeLayer(layer.key)}>X</button>
+                <div key={layer.key} className='layer-container'>
+                    <div className="layer-heading">
+                        <p>Layer {layer.num}</p>
+                        <button onClick={()=>removeLayer(layer.key)}>X</button>
+                    </div>
+                    <div className="layer-setting">
+                        <label>Opacity</label>
+                        <input type='range' value={layer.opacity} min='0' max='1' step='0.01' onChange={(e)=>updateLayer(layer.key, { opacity: Number(e.target.value)})}/>
+                        <input className="alt-setting" type='number' value={layer.opacity} min='0' max='1' step='0.01' onChange={(e)=>updateLayer(layer.key, { opacity: Number(e.target.value)})}/>
+                    </div>
+                    <div className="layer-setting">
+                        <label>Size</label>
+                        <input type='range' value={layer.scale} min='0.1' max='5' step='0.01' onChange={(e)=>updateLayer(layer.key, { scale: Number(e.target.value)})}/>
+                        <input className="alt-setting" type='number' value={layer.scale} step='0.01' onChange={(e)=>updateLayer(layer.key, { scale: Number(e.target.value)})}/>
+                    </div>
+                    <div className="layer-setting">
+                        <label>X-Offset</label>
+                        <input type='range' value={layer.offset.x} min={-mapImage.width} max={mapImage.width} step='1' onChange={(e)=>updateLayer(layer.key, { offset: { x: Number(e.target.value), y: layer.offset.y}})}/>
+                        <input className="alt-setting" type='number' value={layer.offset.x} onChange={(e)=>updateLayer(layer.key, { offset: { x: Number(e.target.value), y: layer.offset.y}})}/>
+                    </div>
+                    <div className="layer-setting">
+                        <label>Y-Offset</label>
+                        <input type='range' value={layer.offset.y} min={-mapImage.height} max={mapImage.height} step='1' onChange={(e)=>updateLayer(layer.key, { offset: { x: layer.offset.x, y: Number(e.target.value)}})}/>
+                        <input className="alt-setting" type='number' value={layer.offset.y} onChange={(e)=>updateLayer(layer.key, { offset: { x: layer.offset.x, y: Number(e.target.value)}})}/>
+                    </div>
                 </div>
             ))}
         </div>

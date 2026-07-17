@@ -14,7 +14,7 @@ body {
 }
 
 button {
-  background-image: linear-gradient(LightSeaGreen, teal);
+  background-image: linear-gradient(var(--accent), var(--accent-border));
   color: #fff;
   padding: 5px 10px;
   border-width: 2px 2px 2px 2px;
@@ -26,7 +26,8 @@ button {
 }
 
 header {
-  background-color: chartreuse;
+  background-color: linear-gradient(chartreuse, olive);
+  color: var(--accent);
 }
 
 .logo {
@@ -45,21 +46,19 @@ header {
     }
 }
 
-aside {
-  width: 200px;
-}
-
 .content-wrapper {
   display: flex;
   flex: 1;
 }
 
 .left-sidebar {
-  border-right: 1px solid #000;
+  border-right: 1px solid var(--accent-border);
+  width: 200px;
 }
 
 .right-sidebar {
-  border-left: 1px solid #000;
+  border-left: 1px solid var(--accent-border);
+  width: 270px;
 }
 
 .shell {
@@ -100,4 +99,30 @@ canvas {
   right: 0;
   margin: 0;
   text-align: center;
+}
+
+.layer-setting {
+  justify-content: flex-end;
+  display: flex;
+  gap: 5px;
+}
+
+.layer-heading {
+  justify-content: center;
+  display: flex;
+  gap: 5px;
+}
+
+.alt-setting {
+  width: 50px;
+}
+
+label {
+  font-size: small;
+}
+
+.layer-container {
+  border: 1px solid var(--social-bg);
+  padding: 5px;
+  margin: 5px;
 }
