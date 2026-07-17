@@ -42,7 +42,7 @@ function LayersPanel() {
             <input type="file" ref={uploadMapButton} accept="image/*" style={{display: 'none'}} onChange={handleMapUpload}/>
             {layers.map((layer, index) => (
                 <div key={layer.key}>
-                    <p>Layer {index+1}</p>
+                    <p>Layer {layer.num}</p>
                     <button onClick={()=>removeLayer(layer.key)}>X</button>
                 </div>
             ))}

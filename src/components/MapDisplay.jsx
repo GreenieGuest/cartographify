@@ -4,7 +4,7 @@ import { useMapStore } from "../store/mapStore";
 export default function MapDisplay() {
     const mapcanvas = useRef(null);
     const canvasContainer = useRef(null);
-    const { mapImage } = useMapStore()
+    const { mapImage, layers } = useMapStore()
 
     // pan/zoom variables
     const pan = useRef({ x: 0, y: 0 })
@@ -35,8 +35,17 @@ export default function MapDisplay() {
 
         ctx.translate(pan.current.x, pan.current.y)
         ctx.scale(zoom.current, zoom.current)
-
         ctx.drawImage(mapImage, 0, 0);
+
+        for (const layer of layers) {
+            ctx.globalAlpha = layer.opacity;
+            //ctx.translate(pan.current.x + layer.pan.x, pan.current.y + layer.pan.y)
+            //ctx.scale(zoom.current + layer.scale, zoom.current + layer.scale)
+            ctx.drawImage(layer.img, layer.offset.x, layer.offset.y, layer.img.width * layer.scale, layer.img.height * layer.scale);
+            ctx.globalAlpha = 1;
+            console.log(layer)
+        }
+
         ctx.restore()
     }
 
