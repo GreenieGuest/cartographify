@@ -6,7 +6,7 @@ export const useMapStore = create((set) => ({
 
   layers: [],
   addLayer: (image) => set((state) => ({
-    layers: [...state.layers, { key: Date.now, img: image, opacity: 0.5, offset: { x: 0, y: 0 }, scale: 1, visible: true}]
+    layers: [...state.layers, { key: Date.now(), img: image, opacity: 0.5, offset: { x: 0, y: 0 }, scale: 1, visible: true}]
   })),
   removeLayer: (key) => set((state) => ({
     layers: state.layers.filter((layer) => layer.key !== key)
