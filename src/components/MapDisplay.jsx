@@ -22,15 +22,15 @@ export default function MapDisplay() {
         const container = canvasContainer.current;
         if (!canvas || !container) return;
         const ctx = canvas.getContext('2d');
-        
+        // check that container size matches canvas size and if not then fix
         const cx = container.clientWidth;
         const cy = container.clientHeight;
         if (canvas.height !== cy) canvas.height = cy;
         if (canvas.width !== cx) canvas.width = cx;
-
+        // Draw the canvas itself (translate and scale according to pan/zoom)
         ctx.save()
-        ctx.imageSmoothingEnabled = false;
-        ctx.setTransform(1, 0, 0, 1, 0, 0)
+        ctx.imageSmoothingEnabled = false; // MUST retain pixelated form (blurred lines are ugly ... also its a pixel map for a reason)
+        ctx.setTransform(1, 0, 0, 1, 0, 0) // identity matrix
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         ctx.translate(pan.current.x, pan.current.y)
@@ -41,6 +41,8 @@ export default function MapDisplay() {
     }
 
     useEffect(() => {
+        // each time a new map image is loaded redraw the canvas
+        // and also add RO to redraw canvas if user changes window size
         draw();
         const resizeObserver = new ResizeObserver(() => draw());
         if (canvasContainer.current) {resizeObserver.observe(canvasContainer.current)}

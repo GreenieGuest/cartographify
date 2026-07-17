@@ -79,7 +79,8 @@ main {
   flex: 1;
   position: relative;
   overflow: hidden;
-  background-color: blue;
+  background-color: black;
+  background-image: url(assets/checker.png);
 }
 
 canvas {
