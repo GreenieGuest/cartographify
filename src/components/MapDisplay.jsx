@@ -4,7 +4,7 @@ import { useMapStore } from "../store/mapStore";
 export default function MapDisplay() {
     const mapcanvas = useRef(null);
     const canvasContainer = useRef(null);
-    const { mapImage, layers } = useMapStore()
+    const { mapImage, layers, createProvince } = useMapStore()
 
     // pan/zoom variables
     const pan = useRef({ x: 0, y: 0 })
@@ -81,12 +81,11 @@ export default function MapDisplay() {
         const ctx = canvas.getContext('2d');
 
         const imageData = ctx.getImageData(x, y, 1, 1);
-        const r = imageData[0];
-        const g = imageData[1];
-        const b = imageData[2];
+        const r = imageData.data[0];
+        const g = imageData.data[1];
+        const b = imageData.data[2];
         console.log(r, g, b);
         
-
         return [r, g, b]
     }
 
@@ -99,6 +98,10 @@ export default function MapDisplay() {
             x: e.clientX - pan.current.x,
             y: e.clientY - pan.current.y
         }
+
+        const { rx, ry } = getRectXY(e)
+        const [r, g, b] = getPixelAt(rx, ry)
+        createProvince(r, g, b)
     }
 
     const handleMouseUp = (e) => { isPanning.current = false }

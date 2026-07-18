@@ -27,9 +27,12 @@ export const useMapStore = create((set) => ({
 
   setSelectedProvince: (r, g, b) => set({ selectedProvince: { rgb: [r, g, b], key: colorKey(r, g, b), data: provinceData[colorKey(r, g, b)] ?? null}}),
   createProvince: (r, g, b) => set((state) => {
-    if (provinceData[colorKey(r,g,b)]) {
-      return;
+    if (state.provinceData[colorKey(r,g,b)]) {
+      console.log("Province already exists :)");
+      console.log(state.provinceData)
+      return state;
     }
+    console.log("Creating province!")
     return ({
     provinceData: {...state.provinceData,
       [colorKey(r,g,b)]: {key: colorKey(r, g, b)}}
