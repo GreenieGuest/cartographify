@@ -126,3 +126,23 @@ label {
   padding: 5px;
   margin: 5px;
 }
+
+.export-menu {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  z-index: 1;
+  justify-content: center;
+  border: 1px solid var(--social-bg);
+  border-radius: 12px;
+  padding: 5px;
+  margin: 5px;
+  gap: 5px;
+}
+
+.buttons-flex {
+  display: flex;
+  gap: 5px;
+  padding: 5px;
+}

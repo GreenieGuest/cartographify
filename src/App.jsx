@@ -52,17 +52,20 @@ function App() {
         <h1><FaMapLocationDot className="logo"/>Cartographify (WIP)</h1>
         <p>visualize your map for eu5 or for other purposes</p>
         <p>made by GreenieGuest</p>
-        <button onClick={()=>uploadMapButton.current?.click()}>
-          Upload Map Image
-        </button>
-        <input type="file" ref={uploadMapButton} accept="image/*" style={{display: 'none'}} onChange={handleMapUpload}/>
 
-        <button onClick={()=>uploadCSVButton.current?.click()}>
-          Upload Map Data (CSV)
-        </button>
-        <input type="file" ref={uploadCSVButton} accept=".csv" style={{display: 'none'}} onChange={handleCSVUpload}/>
+        <div className="buttons-flex">
+          <button onClick={()=>uploadMapButton.current?.click()}>
+            Upload Map Image
+          </button>
+          <input type="file" ref={uploadMapButton} accept="image/*" style={{display: 'none'}} onChange={handleMapUpload}/>
 
-        <DataExport/>
+          <button onClick={()=>uploadCSVButton.current?.click()}>
+            Upload Map Data (CSV)
+          </button>
+          <input type="file" ref={uploadCSVButton} accept=".csv" style={{display: 'none'}} onChange={handleCSVUpload}/>
+
+          <DataExport/>
+        </div>
         
       </header>
       <div className="content-wrapper">
