@@ -13,6 +13,8 @@ export default function MapDisplay() {
     const isPanning = useRef(false)
     const lastMouse = useRef({ x: 0, y: 0 })
 
+    const pixelData = useRef(null);
+
     const [displayedCoords, setDisplayedCoords] = useState({ x: 0, y: 0 });
 
     // Draw function for canvas (call each time pan/zoom/window resizes)
@@ -72,6 +74,22 @@ export default function MapDisplay() {
         }
     }
 
+    const getPixelAt = (x, y) => {
+        const canvas = mapcanvas.current;
+        if (!canvas) return;
+
+        const ctx = canvas.getContext('2d');
+
+        const imageData = ctx.getImageData(x, y, 1, 1);
+        const r = imageData[0];
+        const g = imageData[1];
+        const b = imageData[2];
+        console.log(r, g, b);
+        
+
+        return [r, g, b]
+    }
+
     // [[ M O U S E   L I S T E N E R S ]]
 
     // Event listeners for pan/zoom
@@ -93,6 +111,7 @@ export default function MapDisplay() {
             x: ix,
             y: iy
         })
+        getPixelAt(rx, ry)
 
         if (!isPanning.current) return;
         pan.current = {
