@@ -1,5 +1,9 @@
 import { create } from 'zustand'
 
+function colorKey(r, g, b) {
+  return `${r},${g},${b}`;
+}
+
 export const useMapStore = create((set) => ({
   mapImage: null,
   setMapImage: (image) => set({ mapImage: image }),
@@ -16,4 +20,19 @@ export const useMapStore = create((set) => ({
   updateLayer: (key, attributes) => set((state) => ({
     layers: state.layers.map((layer) => layer.key === key ? {...layer, ...attributes } : layer)
   })),
+
+  selectedProvince: null,
+  provinceData: {},
+  headers: [],
+
+  setSelectedProvince: (r, g, b) => set({ selectedProvince: { rgb: [r, g, b], key: colorKey(r, g, b), data: provinceData[colorKey(r, g, b)] ?? null}}),
+  createProvince: (r, g, b) => set((state) => {
+    if (provinceData[colorKey(r,g,b)]) {
+      return;
+    }
+    return ({
+    provinceData: {...state.provinceData,
+      [colorKey(r,g,b)]: {key: colorKey(r, g, b)}}
+    })
+  })
 }))
