@@ -2,12 +2,14 @@ import { use, useRef, useState } from 'react'
 import MapDisplay from "./components/MapDisplay";
 import Toolbar from "./components/Toolbar";
 import Sidebar from "./components/Sidebar";
+import DataExport from "./components/DataExport";
 import { FaMapLocationDot } from "react-icons/fa6";
 import { useMapStore } from "./store/mapStore";
 import './App.css'
 
 function App() {
   const uploadMapButton = useRef(null);
+  const uploadCSVButton = useRef(null);
   const { mapImage, setMapImage } = useMapStore()
 
   const handleMapUpload = (e) => {
@@ -30,6 +32,20 @@ function App() {
     }
   }
 
+  const handleCSVUpload = (e) => {
+    const file = e.target.files[0];
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const text = event.target.result;
+        // Parsing to be added SOON (Tm)
+      }
+      reader.readAsText(file)
+      e.target.value = ''
+    }
+  }
+
   return (
     <div className="shell">
       <header>
@@ -40,6 +56,13 @@ function App() {
           Upload Map Image
         </button>
         <input type="file" ref={uploadMapButton} accept="image/*" style={{display: 'none'}} onChange={handleMapUpload}/>
+
+        <button onClick={()=>uploadCSVButton.current?.click()}>
+          Upload Map Data (CSV)
+        </button>
+        <input type="file" ref={uploadCSVButton} accept=".csv" style={{display: 'none'}} onChange={handleCSVUpload}/>
+
+        <DataExport/>
         
       </header>
       <div className="content-wrapper">
