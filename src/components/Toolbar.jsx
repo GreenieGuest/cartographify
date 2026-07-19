@@ -31,6 +31,7 @@ export default function Toolbar() {
                 <button
                     key={section.id}
                     onClick={() => setCurrentMapMode(section.id)}
+                    className={currentMapMode === section.id ? 'active' : ''}
                 >{section.label}</button>
             ))}
         </aside>

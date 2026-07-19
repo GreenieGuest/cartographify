@@ -50,8 +50,10 @@ function App() {
     <div className="shell">
       <header>
         <h1><FaMapLocationDot className="logo"/>Cartographify (WIP)</h1>
-        <p>visualize your map for eu5 or for other purposes</p>
-        <p>made by GreenieGuest</p>
+        <div>
+          <p>visualize your map for eu5 or for other purposes</p>
+          <p>made by GreenieGuest</p>
+        </div>
 
         <div className="buttons-flex">
           <button onClick={()=>uploadMapButton.current?.click()}>

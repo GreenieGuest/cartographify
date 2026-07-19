@@ -44,7 +44,7 @@ function LayersPanel() {
                 <div key={layer.key} className='layer-container'>
                     <div className="layer-heading">
                         <p>Layer {layer.num}</p>
-                        <button onClick={()=>removeLayer(layer.key)}>X</button>
+                        <button class="delete" onClick={()=>removeLayer(layer.key)}>X</button>
                     </div>
                     <div className="layer-setting">
                         <label>Opacity</label>
@@ -81,6 +81,7 @@ export default function Sidebar() {
                 <button
                     key={section}
                     onClick={() => setCurrentSection(section)}
+                    className={currentSection === section ? 'active' : ''}
                 >{section}</button>
             ))}
             <h1>{currentSection}</h1>
