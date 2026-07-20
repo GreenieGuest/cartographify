@@ -19,7 +19,7 @@ function hexToRGB(code) { // allows both # and no-#
   return [r, g, b]
 }
 
-export const useMapStore = create((set) => ({
+export const useMapStore = create((set, get) => ({
   mapImage: null,
   setMapImage: (image) => set({ mapImage: image }),
 
@@ -76,5 +76,18 @@ export const useMapStore = create((set) => ({
       }
     }
     set({ provinceData: fullData, headers: headers })
+  },
+
+  exportCSVData: () => {
+    const { provinceData, headers } = get();
+    if (headers.length === 0) return;
+
+    const rows = [headers.join(',')]; // headers is always the first row
+
+    for (const row of Object.values(provinceData)) { // for each province (row [besides headers])
+      rows.push(headers.map((header) => row[header] ?? '').join(','));
+    }
+
+    return rows.join('\n');
   }
 }))
