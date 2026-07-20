@@ -4,6 +4,21 @@ function colorKey(r, g, b) {
   return `${r},${g},${b}`;
 }
 
+function hexToRGB(code) { // allows both # and no-#
+  const c = code.replace(/^#/, "");
+  if (c.length == 6) {
+    const r = parseInt(hex.slice(0, 2), 16);
+    const g = parseInt(hex.slice(2, 4), 16);
+    const b = parseInt(hex.slice(4, 6), 16);
+  } else if (c.length == 3) {
+    const r = parseInt(hex.slice(0, 1) + hex.slice(0, 1), 16);
+    const g = parseInt(hex.slice(1, 2) + hex.slice(1, 2), 16);
+    const b = parseInt(hex.slice(2, 3) + hex.slice(2, 3), 16);
+  }
+
+  return [r, g, b]
+}
+
 export const useMapStore = create((set) => ({
   mapImage: null,
   setMapImage: (image) => set({ mapImage: image }),
@@ -37,5 +52,29 @@ export const useMapStore = create((set) => ({
     provinceData: {...state.provinceData,
       [colorKey(r,g,b)]: {key: colorKey(r, g, b)}}
     })
-  })
+  }),
+
+  loadCSVData: (text) => {
+    const rows = text.trim().split('\n').map(data => data.trim());
+    const headers = rows[0].split(',');
+
+    const fullData = {}
+
+    for (let i = 1; i < rows.length; i++) {
+      const columns = rows[i].split(',').map(data => data.trim())
+
+      const rowData = {}
+      headers.forEach((header, index) => {
+        rowData[header] = columns[index];
+      });
+
+      if (rowData.r && rowData.g && rowData.b) {
+        fullData[colorKey(rowData.r, rowData.g, rowData.b)] = rowData;
+      } else if (rowData.hex) {
+        const [r, g, b] = hexToRGB(rowData.hex);
+        fullData[colorKey(r, g, b)] = rowData;
+      }
+    }
+    set({ provinceData: fullData, headers: headers })
+  }
 }))
