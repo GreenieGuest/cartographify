@@ -35,11 +35,12 @@ function LayersPanel() {
     }
     
     return (
-        <div>
+        <div className='layers-panel'>
             <button onClick={()=>uploadMapButton.current?.click()}>
             + Upload Layer
             </button>
             <input type="file" ref={uploadMapButton} accept="image/*" style={{display: 'none'}} onChange={handleMapUpload}/>
+            <div className="scrollable-box">
             {layers.map((layer, index) => (
                 <div key={layer.key} className='layer-container'>
                     <div className="layer-heading">
@@ -68,6 +69,7 @@ function LayersPanel() {
                     </div>
                 </div>
             ))}
+            </div>
         </div>
     )
 }
@@ -77,6 +79,7 @@ export default function Sidebar() {
 
     return (
         <aside className="right-sidebar">
+            <div className='buttons-flex'>
             {SECTIONS.map((section) => (
                 <button
                     key={section}
@@ -84,6 +87,7 @@ export default function Sidebar() {
                     className={currentSection === section ? 'active' : ''}
                 >{section}</button>
             ))}
+            </div>
             <h1>{currentSection}</h1>
             {currentSection === 'Layers' && <LayersPanel />}
         </aside>

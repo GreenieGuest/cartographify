@@ -66,6 +66,7 @@ header {
 .content-wrapper {
   display: flex;
   flex: 1;
+  min-height: 0;
 }
 
 .left-sidebar {
@@ -76,8 +77,12 @@ header {
 
 .right-sidebar {
   border-left: 1px solid var(--accent-border);
-  width: 270px;
+  width: 300px;
   background-color: var(--sidebar-bg);
+  display: flex;
+  overflow: hidden;
+  min-height: 0; /* REQUIRED */
+  flex-direction: column;
 }
 
 .shell {
@@ -145,6 +150,21 @@ label {
   padding: 5px;
   margin: 5px;
   border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+.layers-panel {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0; /* REQUIRED */
+}
+
+.scrollable-box {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
 }
 
 .export-menu {
