@@ -23,6 +23,8 @@ export const useMapStore = create((set, get) => ({
   mapImage: null,
   setMapImage: (image) => set({ mapImage: image }),
 
+  // Reference Layers
+
   layers: [],
   layerNumber: 0,
   addLayer: (image) => set((state) => ({
@@ -36,11 +38,13 @@ export const useMapStore = create((set, get) => ({
     layers: state.layers.map((layer) => layer.key === key ? {...layer, ...attributes } : layer)
   })),
 
+  // Provvie Data
+
   selectedProvince: null,
   provinceData: {},
   headers: [],
 
-  setSelectedProvince: (r, g, b) => set({ selectedProvince: { rgb: [r, g, b], key: colorKey(r, g, b), data: provinceData[colorKey(r, g, b)] ?? null}}),
+  setSelectedProvince: (r, g, b) => set({ selectedProvince: { rgb: [r, g, b], key: colorKey(r, g, b), data: get().provinceData[colorKey(r, g, b)] ?? null}}),
   createProvince: (r, g, b) => set((state) => {
     if (state.provinceData[colorKey(r,g,b)]) {
       console.log("Province already exists :)");
@@ -75,6 +79,7 @@ export const useMapStore = create((set, get) => ({
         fullData[colorKey(r, g, b)] = rowData;
       }
     }
+    console.log(fullData)
     set({ provinceData: fullData, headers: headers })
   },
 

@@ -4,7 +4,7 @@ import { useMapStore } from "../store/mapStore";
 export default function MapDisplay() {
     const mapcanvas = useRef(null);
     const canvasContainer = useRef(null);
-    const { mapImage, layers, createProvince } = useMapStore()
+    const { mapImage, layers, setSelectedProvince } = useMapStore()
 
     // pan/zoom variables
     const pan = useRef({ x: 0, y: 0 })
@@ -101,7 +101,7 @@ export default function MapDisplay() {
 
         const { rx, ry } = getRectXY(e)
         const [r, g, b] = getPixelAt(rx, ry)
-        createProvince(r, g, b)
+        setSelectedProvince(r, g, b)
     }
 
     const handleMouseUp = (e) => { isPanning.current = false }

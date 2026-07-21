@@ -74,6 +74,35 @@ function LayersPanel() {
     )
 }
 
+function DataPanel() {
+    const { selectedProvince, provinceData, headers, createProvince } = useMapStore()
+
+    if (headers.length < 1) return (
+        <p>No Province Data, import a CSV</p>
+    )
+    if (!selectedProvince) return (
+        <p>Select a province to view data</p>
+    )
+
+    const [r,g,b] = selectedProvince.rgb;
+    const key = selectedProvince.key
+    const data = provinceData[key] ?? null;
+    const isRegistered = !!data;
+    const h = headers.length ? headers : data ? Object.keys(data) : []
+
+    return (
+        <div>
+            { !isRegistered ? (
+                <button onClick={()=>createProvince(r, g, b)}>Create Province</button>
+            ) : (
+                h.map((header) => (
+                    <p>{header}: {data[header] ?? ''}</p>
+                ))
+            )}
+        </div>
+    )
+}
+
 export default function Sidebar() {
     const [currentSection, setCurrentSection] = useState('Data')
 
@@ -90,6 +119,7 @@ export default function Sidebar() {
             </div>
             <h1>{currentSection}</h1>
             {currentSection === 'Layers' && <LayersPanel />}
+            {currentSection === 'Data' && <DataPanel />}
         </aside>
     )
 }
