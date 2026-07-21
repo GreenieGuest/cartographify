@@ -6,6 +6,8 @@ export default function MapDisplay() {
     const canvasContainer = useRef(null);
     const { mapImage, layers, setSelectedProvince } = useMapStore()
 
+    const TILE_SIZE = 512;
+
     // pan/zoom variables
     const pan = useRef({ x: 0, y: 0 })
     const zoom = useRef(1)
@@ -55,6 +57,20 @@ export default function MapDisplay() {
         // each time a new map image is loaded redraw the canvas
         // and also add RO to redraw canvas if user changes window size
         draw();
+        const offscreenCanvas = document.createElement('canvas') // create a canvas offscreen to load the full image so it can be split into parts (not seen by user)
+        offscreenCanvas.width = mapImage.width;
+        offscreenCanvas.height = mapImage.height;
+
+        const ctx = offscreenCanvas.getContext('2d');
+        ctx.drawImage(mapImage, 0, 0);
+
+        const idata = ctx.getImageData(0, 0, mapImage.width, mapImage.height);
+        pixelData.current = {
+            data: idata.data,
+            width: mapImage.width,
+            height: mapImage.height,
+        }
+
         const resizeObserver = new ResizeObserver(() => draw());
         if (canvasContainer.current) {resizeObserver.observe(canvasContainer.current)}
         return () => resizeObserver.disconnect()
