@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useMapStore } from "../store/mapStore";
 
 export default function MapDisplay() {
@@ -18,6 +18,30 @@ export default function MapDisplay() {
     const pixelData = useRef(null);
 
     const [displayedCoords, setDisplayedCoords] = useState({ x: 0, y: 0 });
+
+    // Tile Generation (splits large maps into grid to not crash your PC)
+    // creates ImageBitmap from pixelData
+
+    const createTile = useCallback((tx, ty, idata) => {
+        const { data, width, height } = idata;
+        // get left-most pixel and upper-most pixel by multiplying tx/ty by tile size
+        const x0 = tx * TILE_SIZE;
+        const y0 = ty * TILE_SIZE;
+        // 'edge' cases
+        const tileWidth = Math.min(TILE_SIZE, width - x0)
+        const tileHeight = Math.min(TILE_SIZE, height - y0)
+
+        const tile = new ImageData(tileWidth, tileHeight);
+        for (let row = 0; row < tileHeight; row++) {
+            const sourceOffset = ((y0 + row) * width + x0) * 4 // (y*width) + x (4 bytes in memory)
+            const destinationOffset = row * tileWidth * 4;
+            tile.data.set(
+                data.subarray(sourceOffset, sourceOffset + tileWidth * 3),
+                destinationOffset
+            )
+        }
+        return createImageBitmap(tile); // returns Promise<ImageBitmap>
+    }, [])
 
     // Draw function for canvas (call each time pan/zoom/window resizes)
     const draw = (e) => {
@@ -56,6 +80,7 @@ export default function MapDisplay() {
     useEffect(() => {
         // each time a new map image is loaded redraw the canvas
         // and also add RO to redraw canvas if user changes window size
+        if (!mapImage) return
         draw();
         const offscreenCanvas = document.createElement('canvas') // create a canvas offscreen to load the full image so it can be split into parts (not seen by user)
         offscreenCanvas.width = mapImage.width;
