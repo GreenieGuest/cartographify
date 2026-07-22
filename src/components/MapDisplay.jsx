@@ -39,7 +39,7 @@ export default function MapDisplay() {
             const sourceOffset = ((y0 + row) * width + x0) * 4 // (y*width) + x (4 bytes in memory)
             const destinationOffset = row * tileWidth * 4;
             tile.data.set(
-                data.subarray(sourceOffset, sourceOffset + tileWidth * 3),
+                data.subarray(sourceOffset, sourceOffset + tileWidth * 4),
                 destinationOffset
             )
         }
@@ -85,6 +85,7 @@ export default function MapDisplay() {
 
         // Draw the canvas itself (translate and scale according to pan/zoom)
         ctx.save()
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.imageSmoothingEnabled = false; // MUST retain pixelated form (blurred lines are ugly ... also its a pixel map for a reason)
         
         for (let ty = imgTopBound; ty <= imgBottomBound; ty++) {
@@ -109,7 +110,6 @@ export default function MapDisplay() {
         }
 
         ctx.setTransform(1, 0, 0, 1, 0, 0) // identity matrix
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         ctx.translate(pan.current.x, pan.current.y)
         ctx.scale(zoom.current, zoom.current)
@@ -130,7 +130,6 @@ export default function MapDisplay() {
         // each time a new map image is loaded redraw the canvas
         // and also add RO to redraw canvas if user changes window size
         if (!mapImage) return
-        draw();
         const offscreenCanvas = document.createElement('canvas') // create a canvas offscreen to load the full image so it can be split into parts (not seen by user)
         offscreenCanvas.width = mapImage.width;
         offscreenCanvas.height = mapImage.height;
@@ -144,6 +143,11 @@ export default function MapDisplay() {
             width: mapImage.width,
             height: mapImage.height,
         }
+
+        tileCache.current.forEach(b => b.close?.())
+        tileCache.current.clear()
+        currentTile.current.clear()
+        draw();
 
         const resizeObserver = new ResizeObserver(() => draw());
         if (canvasContainer.current) {resizeObserver.observe(canvasContainer.current)}
