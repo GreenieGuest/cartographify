@@ -15,7 +15,10 @@ export default function MapDisplay() {
     const isPanning = useRef(false)
     const lastMouse = useRef({ x: 0, y: 0 })
 
+    // Img data
     const pixelData = useRef(null);
+    const tileCache = useRef(new Map());
+    const currentTile = useRef(new Set());
 
     const [displayedCoords, setDisplayedCoords] = useState({ x: 0, y: 0 });
 
@@ -55,9 +58,35 @@ export default function MapDisplay() {
         const cy = container.clientHeight;
         if (canvas.height !== cy) canvas.height = cy;
         if (canvas.width !== cx) canvas.width = cx;
+
+        const z = zoom.current
+        const px = pan.current.x
+        const py = pan.current.y
+        const { width: imgW, height: imgH } = pixelData.current;
+
+        // how many tiles will be needed
+        const numTilesX = Math.ceil(imgW / TILE_SIZE)
+        const numTilesY = Math.ceil(imgH / TILE_SIZE)
+        // get image bounds to start drawing tiles
+        const imgLeftBound = Math.max(0, Math.floor(-px / z / TILE_SIZE))
+        const imgTopBound = Math.max(0, Math.floor(-py / z / TILE_SIZE))
+        const imgRightBound = Math.min(numTilesX - 1,
+            Math.ceil((cx-px) / z / TILE_SIZE) 
+        )
+        const imgBottomBound = Math.min(numTilesY - 1,
+            Math.ceil((cy-py) / z / TILE_SIZE) 
+        )
+
         // Draw the canvas itself (translate and scale according to pan/zoom)
         ctx.save()
         ctx.imageSmoothingEnabled = false; // MUST retain pixelated form (blurred lines are ugly ... also its a pixel map for a reason)
+        
+        for (let ty = imgTopBound; ty <= imgBottomBound; ty++) {
+            for (let tx = imgLeftBound; tx <= imgRightBound; tx++) {
+                // TODO
+            }
+        }
+
         ctx.setTransform(1, 0, 0, 1, 0, 0) // identity matrix
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
