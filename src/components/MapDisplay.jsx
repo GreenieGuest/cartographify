@@ -62,7 +62,13 @@ export default function MapDisplay() {
         const z = zoom.current
         const px = pan.current.x
         const py = pan.current.y
-        const { width: imgW, height: imgH } = pixelData.current;
+
+        const srcPixels = pixelData.current;
+        if (!srcPixels) {
+            console.log("pixels not ready yet")
+            return
+        }
+        const { width: imgW, height: imgH } = srcPixels;
 
         // how many tiles will be needed
         const numTilesX = Math.ceil(imgW / TILE_SIZE)
@@ -83,7 +89,22 @@ export default function MapDisplay() {
         
         for (let ty = imgTopBound; ty <= imgBottomBound; ty++) {
             for (let tx = imgLeftBound; tx <= imgRightBound; tx++) {
-                // TODO
+                const key = `${tx}:${ty}`
+                const bmp = tileCache.current.get(key)
+
+                if (bmp) {
+                    const dx = px + tx * TILE_SIZE * z
+                    const dy = py + ty * TILE_SIZE * z
+                    ctx.drawImage(bmp, dx, dy, bmp.width * z, bmp.height * z) // draws one tile of the image at a time
+                } else if (!currentTile.current.has(key)) {
+                    currentTile.current.add(key)
+                    createTile(tx, ty, srcPixels).then(bitmap => {
+                        if (!bitmap) return;
+                        tileCache.current.set(key, bitmap)
+                        currentTile.current.delete(key)
+                        draw()
+                    })
+                }
             }
         }
 
@@ -92,7 +113,6 @@ export default function MapDisplay() {
 
         ctx.translate(pan.current.x, pan.current.y)
         ctx.scale(zoom.current, zoom.current)
-        ctx.drawImage(mapImage, 0, 0);
 
         for (const layer of layers) {
             ctx.globalAlpha = layer.opacity;
