@@ -1,7 +1,8 @@
 import { useState } from 'react'
+import { useMapStore } from '../store/mapStore'
 
 export default function Toolbar() {
-    const [currentMapMode, setCurrentMapMode] = useState('default')
+    const { mapMode, setMapMode } = useMapStore()
 
     const MAP_MODES = [
         { id: 'default', label: 'Default (Location)'},
@@ -30,8 +31,8 @@ export default function Toolbar() {
             {MAP_MODES.map((section) => (
                 <button
                     key={section.id}
-                    onClick={() => setCurrentMapMode(section.id)}
-                    className={currentMapMode === section.id ? 'active' : ''}
+                    onClick={() => setMapMode(section.id)}
+                    className={mapMode === section.id ? 'active' : ''}
                 >{section.label}</button>
             ))}
         </aside>

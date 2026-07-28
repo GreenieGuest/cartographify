@@ -94,5 +94,10 @@ export const useMapStore = create((set, get) => ({
     }
 
     return rows.join('\n');
-  }
+  },
+
+  // Mapmodes
+
+  mapMode: null,
+  setMapMode: (text) => set({ mapMode: text }),
 }))
