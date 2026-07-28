@@ -67,7 +67,7 @@ export default function MapDisplay() {
         const px = pan.current.x
         const py = pan.current.y
 
-        const srcPixels = pixelData.current;
+        const srcPixels = (mapMode !== 'default' && pixelData_mapmode.current) ? pixelData_mapmode.current : pixelData.current;
         if (!srcPixels) {
             console.log("pixels not ready yet")
             return
@@ -211,7 +211,7 @@ export default function MapDisplay() {
         }
     }
 
-    const getPixelAt = (x, y) => {
+    const getCanvasPixelAt = (x, y) => { // Old, gets pixel data directly from Canvas (hits map modes)
         const canvas = mapcanvas.current;
         if (!canvas) return;
 
@@ -221,6 +221,26 @@ export default function MapDisplay() {
         const r = imageData.data[0];
         const g = imageData.data[1];
         const b = imageData.data[2];
+        console.log(r, g, b);
+        
+        return [r, g, b]
+    }
+
+    const getPixelAt = (x, y) => {
+        console.log(x, y)
+        const imageData = pixelData.current
+        console.log(imageData)
+        if (!imageData || !imageData.data) return null;
+        
+        // in-bounds checker
+        if (x < 0 || y < 0 || x >= imageData.width || y >= imageData.height) return null
+
+        const i = (y * imageData.width + x) * 4
+        console.log(i)
+
+        const r = imageData.data[i];
+        const g = imageData.data[i+1];
+        const b = imageData.data[i+2];
         console.log(r, g, b);
         
         return [r, g, b]
@@ -237,7 +257,8 @@ export default function MapDisplay() {
         }
 
         const { rx, ry } = getRectXY(e)
-        const [r, g, b] = getPixelAt(rx, ry)
+        const { x: ix, y: iy } = getImageCoords(rx, ry)
+        const [r, g, b] = getPixelAt(ix, iy)
         setSelectedProvince(r, g, b)
     }
 
@@ -251,7 +272,7 @@ export default function MapDisplay() {
             x: ix,
             y: iy
         })
-        getPixelAt(rx, ry)
+        getPixelAt(ix, iy)
 
         if (!isPanning.current) return;
         pan.current = {

@@ -28,43 +28,43 @@ self.onmessage = ({ data }) => {
 
     // get paradox-style colors for different map modes ( very useful in all cases )
     const getMapModeColor = (province) => {
-        if (visualizationMode === 'assigned') return province ? [0,255,0] : [0,0,0]
+        if (mapMode === 'assigned') return province ? [0,255,0] : [0,0,0]
         if (!province) return null
-        if (visualizationMode === 'tradeGood') {
+        if (mapMode === 'tradeGood') {
             const g = (province.tradeGood || province.grade_good || province.raw_material || '').toLowerCase()
-            return TRADE_GOOD_COLORS[g] || hashColor(g)
+            return TRADE_GOOD_COLORS[g] || getHashColor(g)
         }
-        if (visualizationMode === 'climate') {
+        if (mapMode === 'climate') {
             const g = (province.climate || '').toLowerCase()
-            return CLIMATE_COLORS[g] || hashColor(g)
+            return CLIMATE_COLORS[g] || getHashColor(g)
         }
-        if (visualizationMode === 'terrain') {
+        if (mapMode === 'terrain') {
             const g = (province.terrain || province.topography || '').toLowerCase()
-            return TERRAIN_COLORS[g] || hashColor(g)
+            return TERRAIN_COLORS[g] || getHashColor(g)
         }
-        if (visualizationMode === 'vegetation') {
+        if (mapMode === 'vegetation') {
             const g = (province.vegetation || '').toLowerCase()
-            return TERRAIN_COLORS[g] || hashColor(g)
+            return TERRAIN_COLORS[g] || getHashColor(g)
         }
-        if (visualizationMode === 'population') {
+        if (mapMode === 'population') {
             const g = Number(province.population || '')
             return (getColorOnScale(g, 0, 150000))
         }
-        if (visualizationMode === 'harbors') {
+        if (mapMode === 'harbors') {
             const g = Number(province.natural_harbor_suitability || '')
             return (getColorOnScale(g, 0, 1))
         }
         
-        if (visualizationMode === 'culture') return hashColor(province.culture || '')
-        if (visualizationMode === 'religion') return hashColor(province.religion || '')
-        if (visualizationMode === 'owner') return hashColor(province.owner || '')
+        if (mapMode === 'culture') return getHashColor(province.culture || '')
+        if (mapMode === 'religion') return getHashColor(province.religion || '')
+        if (mapMode === 'owner') return getHashColor(province.owner || '')
 
-        if (visualizationMode === 'continent') return hashColor(province.continent || '')
-        if (visualizationMode === 'subcontinent') return hashColor(province.subcontinent || '')
-        if (visualizationMode === 'region') return hashColor(province.region || '')
-        if (visualizationMode === 'area') return hashColor(province.area || '')
-        if (visualizationMode === 'province') return hashColor(province.province || '')
-        if (visualizationMode === 'isCoastal') {
+        if (mapMode === 'continent') return getHashColor(province.continent || '')
+        if (mapMode === 'subcontinent') return getHashColor(province.subcontinent || '')
+        if (mapMode === 'region') return getHashColor(province.region || '')
+        if (mapMode === 'area') return getHashColor(province.area || '')
+        if (mapMode === 'province') return getHashColor(province.province || '')
+        if (mapMode === 'isCoastal') {
             const c = province.isCoastal || province.is_coastal || province.coastal || ''
             return (c === '1' || c.toLowerCase() === 'true' || c.toLowerCase() === 'yes') ? [70,130,180] : [139,115,85]
         }
