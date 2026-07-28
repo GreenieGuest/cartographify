@@ -4,7 +4,7 @@ import { useMapStore } from "../store/mapStore";
 export default function MapDisplay() {
     const mapcanvas = useRef(null);
     const canvasContainer = useRef(null);
-    const { mapImage, layers, setSelectedProvince } = useMapStore()
+    const { mapImage, layers, setSelectedProvince, mapMode, provinceData } = useMapStore()
 
     const TILE_SIZE = 512;
 
@@ -17,8 +17,12 @@ export default function MapDisplay() {
 
     // Img data
     const pixelData = useRef(null);
+    const pixelData_mapmode = useRef(null);
     const tileCache = useRef(new Map());
     const currentTile = useRef(new Set());
+
+    // Web Workers
+    const mapModeWorker = useRef(null)
 
     const [displayedCoords, setDisplayedCoords] = useState({ x: 0, y: 0 });
 
@@ -30,7 +34,7 @@ export default function MapDisplay() {
         // get left-most pixel and upper-most pixel by multiplying tx/ty by tile size
         const x0 = tx * TILE_SIZE;
         const y0 = ty * TILE_SIZE;
-        // 'edge' cases
+        // 'edge' cases ;)
         const tileWidth = Math.min(TILE_SIZE, width - x0)
         const tileHeight = Math.min(TILE_SIZE, height - y0)
 
@@ -126,6 +130,7 @@ export default function MapDisplay() {
         ctx.restore()
     }
 
+    // Canvas Drawer
     useEffect(() => {
         // each time a new map image is loaded redraw the canvas
         // and also add RO to redraw canvas if user changes window size
@@ -153,6 +158,44 @@ export default function MapDisplay() {
         if (canvasContainer.current) {resizeObserver.observe(canvasContainer.current)}
         return () => resizeObserver.disconnect()
     }, [mapImage, layers])
+
+    // Mapmode Drawer
+
+    useEffect(()=> {
+        if (!pixelData.current) return
+        if (mapMode == 'default') {// nothing to change 
+            pixelData_mapmode.current = null;
+
+            tileCache.current.forEach(b => b.close?.())
+            tileCache.current.clear()
+            currentTile.current.clear()
+            draw()
+            return
+        }
+        
+        if (mapModeWorker.current) mapModeWorker.current.terminate()
+        mapModeWorker.current = new Worker(
+            new URL('../workers/recolorWorker.js', import.meta.url), { type: 'module' }
+        )
+        const { data, width, height } = pixelData.current;
+        const copy = new Uint8ClampedArray(data)
+
+        mapModeWorker.current.onmessage = ({ data: msg }) => {
+            pixelData_mapmode.current = {
+                data: new Uint8ClampedArray(msg.buffer),
+                width: msg.width,
+                height: msg.height,
+            }
+
+            tileCache.current.forEach(b => b.close?.())
+            tileCache.current.clear()
+            currentTile.current.clear()
+            draw()
+        }
+        mapModeWorker.current.postMessage(
+            { buffer: copy.buffer, width, height, provinceData, mapMode }, [copy.buffer]
+        )
+    }, [mapMode, provinceData])
 
     // [[ Helper functions ]]
 
