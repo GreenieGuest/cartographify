@@ -83,6 +83,13 @@ export const useMapStore = create((set, get) => ({
     set({ provinceData: fullData, headers: headers })
   },
 
+  updateData: (key, field, value) => set((state) => ({
+    provinceData: {
+      ...state.provinceData,
+      [key]: { ...state.provinceData[key], [field]: value }
+    }
+  })),
+
   exportCSVData: () => {
     const { provinceData, headers } = get();
     if (headers.length === 0) return;

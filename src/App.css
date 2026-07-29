@@ -189,17 +189,19 @@ label {
 }
 
 .input-attribute {
-  border: 2px solid grey;
+  border: 2px solid var(--inside-borders);
   border-radius: 0 8px 0 8px;
   background-color: #F4CADE;
   color: white;
-  background-image: linear-gradient(#F4CADE, black);
-  background-size: contain;
-  font-size: 20px;
-  display: block;
-  margin: 0 auto;
+  background-image: linear-gradient(var(--accent-border), black);
+  padding: 1px 4px;
+  font-size: 11px;
 }
 
 .input-label {
-  font-size: 20px;
+  font-size: 11px;
+  font-weight: bold;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  max-width: 100px;
 }

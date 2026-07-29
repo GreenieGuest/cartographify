@@ -75,7 +75,8 @@ function LayersPanel() {
 }
 
 function DataPanel() {
-    const { selectedProvince, provinceData, headers, createProvince } = useMapStore()
+    const { selectedProvince, provinceData, headers, createProvince, updateData } = useMapStore()
+    const [selectedAttributes, setSelectedAttributes] = useState([]);
 
     if (headers.length < 1) return (
         <p>No Province Data, import a CSV</p>
@@ -90,23 +91,47 @@ function DataPanel() {
     const isRegistered = !!data;
     const h = headers.length ? headers : data ? Object.keys(data) : []
 
+    const handleAttributeSelect = (e) => {
+        const { value, checked } = e.target;
+
+        if (checked) {
+            setSelectedAttributes((prev) => [...prev, value]);
+        } else {
+            setSelectedAttributes((prev) => prev.filter((item) => item !== value));
+        }
+
+        // console.log(selectedAttributes)
+    }
+
     return (
         <div className='scrollable-box'>
             { !isRegistered ? (
                 <button onClick={()=>createProvince(r, g, b)}>Create Province</button>
             ) : (
-                h.map((header) => (
-                    <div className='buttons-flex'>
-                        <input
-                            type='checkbox'
-                        />
-                        <p className='input-label'>{header}</p>
-                        <input
-                            className='input-attribute'
-                            value={data[header] ?? ''}
-                        />
-                    </div>
-                ))
+                <table className="province-data-table">
+                    <tbody>
+                        {h.map((header) => (
+                            <tr>
+                                <td>
+                                    <input
+                                        value={header}
+                                        type='checkbox'
+                                        onChange={handleAttributeSelect}
+                                        checked={selectedAttributes.includes(header)}
+                                    />
+                                </td>
+                                <td className='input-label'>{header}</td>
+                                <td>
+                                    <input
+                                        className='input-attribute'
+                                        value={data[header] ?? ''}
+                                        onChange={e => updateData(key, header, e.target.value)}
+                                    />
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
             )}
         </div>
     )
