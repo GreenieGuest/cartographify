@@ -401,7 +401,7 @@ export default function MapDisplay() {
                 ref={labelcanvas}
                 style={{width: '100%', height: '100%', pointerEvents: 'none'}}
             />
-            <p className='coords'>Coords: ({displayedCoords.x}, {displayedCoords.y})</p>
+            <p className='coords' style={{pointerEvents: 'none'}}>Coords: ({displayedCoords.x}, {displayedCoords.y})</p>
         </div>
     )
 }

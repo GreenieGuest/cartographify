@@ -81,7 +81,7 @@ header {
   background-color: var(--sidebar-bg);
   display: flex;
   overflow: hidden;
-  min-height: 0; /* REQUIRED */
+  min-height: 0;
   flex-direction: column;
 }
 
@@ -158,12 +158,13 @@ label {
   display: flex;
   flex-direction: column;
   flex: 1;
-  min-height: 0; /* REQUIRED */
+  min-height: 0;
 }
 
 .scrollable-box {
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
   min-height: 0;
 }
 
@@ -185,4 +186,20 @@ label {
   display: flex;
   gap: 5px;
   padding: 5px;
+}
+
+.input-attribute {
+  border: 2px solid grey;
+  border-radius: 0 8px 0 8px;
+  background-color: #F4CADE;
+  color: white;
+  background-image: linear-gradient(#F4CADE, black);
+  background-size: contain;
+  font-size: 20px;
+  display: block;
+  margin: 0 auto;
+}
+
+.input-label {
+  font-size: 20px;
 }

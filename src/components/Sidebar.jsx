@@ -91,12 +91,21 @@ function DataPanel() {
     const h = headers.length ? headers : data ? Object.keys(data) : []
 
     return (
-        <div>
+        <div className='scrollable-box'>
             { !isRegistered ? (
                 <button onClick={()=>createProvince(r, g, b)}>Create Province</button>
             ) : (
                 h.map((header) => (
-                    <p>{header}: {data[header] ?? ''}</p>
+                    <div className='buttons-flex'>
+                        <input
+                            type='checkbox'
+                        />
+                        <p className='input-label'>{header}</p>
+                        <input
+                            className='input-attribute'
+                            value={data[header] ?? ''}
+                        />
+                    </div>
                 ))
             )}
         </div>
