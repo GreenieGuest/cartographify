@@ -44,6 +44,7 @@ export const useMapStore = create((set, get) => ({
   provinceData: {},
   headers: [],
 
+  setProvinceData: (data) => set({ provinceData: data }),
   setSelectedProvince: (r, g, b) => set({ selectedProvince: { rgb: [r, g, b], key: colorKey(r, g, b), data: get().provinceData[colorKey(r, g, b)] ?? null}}),
   createProvince: (r, g, b) => set((state) => {
     if (state.provinceData[colorKey(r,g,b)]) {

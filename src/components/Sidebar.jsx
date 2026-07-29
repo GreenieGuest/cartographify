@@ -75,7 +75,7 @@ function LayersPanel() {
 }
 
 function DataPanel() {
-    const { selectedProvince, provinceData, headers, createProvince, updateData } = useMapStore()
+    const { selectedProvince, provinceData, setProvinceData, headers, createProvince, updateData } = useMapStore()
     const [selectedAttributes, setSelectedAttributes] = useState([]);
 
     if (headers.length < 1) return (
@@ -103,47 +103,24 @@ function DataPanel() {
         // console.log(selectedAttributes)
     }
 
-    const handleCopyProvince = () => {
+    const copyAttribute = (scale) => {
         for (const pKey in provinceData) {
             const p = provinceData[pKey]
 
-            if (p.province == data.province) {
+            if (p[scale] == data[scale]) {
                 for (const field of h) {
-                    if (field == 'vegetation' || field == 'terrain' || field == 'climate' || field == 'tradeGood' || field == 'topography' || field == 'raw_material' || field == 'region' || field == 'owner' || field == 'religion' || field == 'culture' || field == 'population') {
+                    if (selectedAttributes.includes(field)) {
                         updateData(pKey, field, data[field] ?? '')
                     }
                 }
             }
         }
     }
+    
+    const handleCopyProvince = () => copyAttribute('province');
+    const handleCopyArea = () => copyAttribute('area');
+    const handleCopyRegion = () => copyAttribute('region');
 
-    const handleCopyArea = () => {
-        for (const pKey in provinceData) {
-            const p = provinceData[pKey]
-
-            if (p.area == data.area) {
-                for (const field of h) {
-                    if (field == 'vegetation' || field == 'terrain' || field == 'climate' || field == 'tradeGood' || field == 'topography' || field == 'raw_material' || field == 'region' || field == 'owner' || field == 'religion' || field == 'culture' || field == 'population') {
-                        updateData(pKey, field, data[field] ?? '')
-                    }
-                }
-            }
-        }
-    }
-
-    const handleCopyRegion = () => {
-        for (const pKey in provinceData) {
-            const p = provinceData[pKey]
-
-            if (p.region == data.region) {
-                for (const field of h) {
-                    if (field == 'vegetation' || field == 'terrain' || field == 'climate' || field == 'tradeGood' || field == 'topography' || field == 'raw_material' || field == 'region' || field == 'owner' || field == 'religion' || field == 'culture' || field == 'population') {
-                        updateData(pKey, field, data[field] ?? '')
-                    }
-                }
-            }
-        }
-    }
 
     return (
         <div className='scrollable-box'>
