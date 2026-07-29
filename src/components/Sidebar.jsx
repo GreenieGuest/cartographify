@@ -103,35 +103,82 @@ function DataPanel() {
         // console.log(selectedAttributes)
     }
 
+    const handleCopyProvince = () => {
+        for (const pKey in provinceData) {
+            const p = provinceData[pKey]
+
+            if (p.province == data.province) {
+                for (const field of h) {
+                    if (field == 'vegetation' || field == 'terrain' || field == 'climate' || field == 'tradeGood' || field == 'topography' || field == 'raw_material' || field == 'region' || field == 'owner' || field == 'religion' || field == 'culture' || field == 'population') {
+                        updateData(pKey, field, data[field] ?? '')
+                    }
+                }
+            }
+        }
+    }
+
+    const handleCopyArea = () => {
+        for (const pKey in provinceData) {
+            const p = provinceData[pKey]
+
+            if (p.area == data.area) {
+                for (const field of h) {
+                    if (field == 'vegetation' || field == 'terrain' || field == 'climate' || field == 'tradeGood' || field == 'topography' || field == 'raw_material' || field == 'region' || field == 'owner' || field == 'religion' || field == 'culture' || field == 'population') {
+                        updateData(pKey, field, data[field] ?? '')
+                    }
+                }
+            }
+        }
+    }
+
+    const handleCopyRegion = () => {
+        for (const pKey in provinceData) {
+            const p = provinceData[pKey]
+
+            if (p.region == data.region) {
+                for (const field of h) {
+                    if (field == 'vegetation' || field == 'terrain' || field == 'climate' || field == 'tradeGood' || field == 'topography' || field == 'raw_material' || field == 'region' || field == 'owner' || field == 'religion' || field == 'culture' || field == 'population') {
+                        updateData(pKey, field, data[field] ?? '')
+                    }
+                }
+            }
+        }
+    }
+
     return (
         <div className='scrollable-box'>
             { !isRegistered ? (
                 <button onClick={()=>createProvince(r, g, b)}>Create Province</button>
             ) : (
-                <table className="province-data-table">
-                    <tbody>
-                        {h.map((header) => (
-                            <tr>
-                                <td>
-                                    <input
-                                        value={header}
-                                        type='checkbox'
-                                        onChange={handleAttributeSelect}
-                                        checked={selectedAttributes.includes(header)}
-                                    />
-                                </td>
-                                <td className='input-label'>{header}</td>
-                                <td>
-                                    <input
-                                        className='input-attribute'
-                                        value={data[header] ?? ''}
-                                        onChange={e => updateData(key, header, e.target.value)}
-                                    />
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+                <div>
+                    <table className="province-data-table">
+                        <tbody>
+                            {h.map((header) => (
+                                <tr>
+                                    <td>
+                                        <input
+                                            value={header}
+                                            type='checkbox'
+                                            onChange={handleAttributeSelect}
+                                            checked={selectedAttributes.includes(header)}
+                                        />
+                                    </td>
+                                    <td className='input-label'>{header}</td>
+                                    <td>
+                                        <input
+                                            className='input-attribute'
+                                            value={data[header] ?? ''}
+                                            onChange={e => updateData(key, header, e.target.value)}
+                                        />
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                    <button onClick={handleCopyProvince}>Copy to All in Province</button>
+                    <button onClick={handleCopyArea}>Copy to All In Area</button>
+                    <button onClick={handleCopyRegion}>Copy to All In Region</button>
+                </div>
             )}
         </div>
     )
