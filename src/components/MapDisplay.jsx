@@ -144,7 +144,55 @@ export default function MapDisplay() {
         if (canvas.width !== cx) canvas.width = cx;
         ctx.clearRect(0, 0, cx, cy)
 
+        const z = zoom.current;
+        const px = pan.current.x
+        const py = pan.current.y
 
+        if (!showLabels || z < 0.15 || !pixelData.current) return
+        if (!centroids || Object.keys(centroids).length === 0) return
+
+        // show label based on current map mode, EG "Horses" everywhere for trade goods/raw material
+
+        const getLabelText = (key) => {
+            const p = provinceData[key]
+            if (!p) return null
+            if (mapMode === 'continent') return p.continent || null
+            if (mapMode === 'subcontinent') return p.subcontinent || null
+            if (mapMode === 'region') return p.region || null
+            if (mapMode === 'area') return p.area || null
+            if (mapMode === 'province') return p.province || null
+
+            if (mapMode === 'owner') return p.owner || null
+            if (mapMode === 'culture') return p.culture || null
+            if (mapMode === 'religion') return p.religion || null
+            if (mapMode === 'population') return p.population || p.Population ? String(p.population || p.Population) : null
+
+            if (mapMode === 'climate') return p.climate || null
+            if (mapMode === 'vegetation') return p.vegetation || null
+            if (mapMode === 'terrain') return p.topography || p.terrain || null
+            if (mapMode === 'tradeGood') return p.raw_material || p.tradeGood || null
+            // if unsupported or there is nothing then return province name
+            return p.name || null
+        }
+        // Map modes that group labels instead of displaying one on each individual location
+        const isAggregate = ['region', 'area', 'province', 'continent', 'subcontinent', 'owner'].includes(mapMode)
+
+        const labels = []
+
+        for (const [key, c] of Object.entries(centroids)) {
+            const text = getLabelText(key)
+            if (!text) continue
+            // Resize each centroid's position on the map to the pan and zoom to properly display the labels
+            const labelX = px + c.cx * z
+            const labelY = py + c.cy * z
+            labels.push({ text, labelX, labelY })
+        }
+
+        ctx.textAlign = 'center'
+        ctx.textBaseline = 'middle'
+        for (const {text, labelX, labelY} of labels) {
+            ctx.fillText(text, labelX, labelY)
+        }
     }
 
     // Canvas Drawer
