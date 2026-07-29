@@ -5,7 +5,7 @@ export default function MapDisplay() {
     const mapcanvas = useRef(null);
     const labelcanvas = useRef(null);
     const canvasContainer = useRef(null);
-    const { mapImage, layers, setSelectedProvince, mapMode, provinceData, centroids, showLabels } = useMapStore()
+    const { mapImage, layers, setSelectedProvince, mapMode, provinceData, centroids, setCentroids, showLabels } = useMapStore()
 
     const TILE_SIZE = 512;
 
@@ -130,6 +130,7 @@ export default function MapDisplay() {
         }
 
         ctx.restore()
+        drawLabels()
     }
 
     function drawLabels() {
@@ -219,10 +220,30 @@ export default function MapDisplay() {
         currentTile.current.clear()
         draw();
 
+        if (centroidWorker.current) centroidWorker.current.terminate()
+        centroidWorker.current = new Worker(
+            new URL('../workers/centroidWorker.js', import.meta.url), { type: 'module' }
+        )
+        centroidWorker.current.onmessage = ({ data: msg }) => {
+            setCentroids(msg.centroids)
+            draw()
+        }
+        const copy = new Uint8ClampedArray(idata.data)
+        centroidWorker.current.postMessage(
+            { buffer: copy.buffer, width: mapImage.width, height: mapImage.height },
+            [copy.buffer]
+        )
+
         const resizeObserver = new ResizeObserver(() => draw());
         if (canvasContainer.current) {resizeObserver.observe(canvasContainer.current)}
         return () => resizeObserver.disconnect()
-    }, [mapImage, layers])
+    }, [mapImage])
+
+    // Redraw when user changes reference layers, labels, map mode, etc
+    useEffect(() => {
+        console.log("Drawing!")
+        draw()
+    }, [showLabels, centroids, layers])
 
     // Mapmode Drawer
 
