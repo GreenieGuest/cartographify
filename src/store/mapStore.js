@@ -100,4 +100,12 @@ export const useMapStore = create((set, get) => ({
 
   mapMode: null,
   setMapMode: (text) => set({ mapMode: text }),
+  showLabels: true,
+  setShowLabels: (show) => set({ showLabels: show }),
+
+  // Centoids to label mapmodes
+
+  centroids: {},
+  setCentroids: (centroids) => set({ centroids }),
+
 }))

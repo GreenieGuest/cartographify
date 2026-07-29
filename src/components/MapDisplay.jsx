@@ -3,8 +3,9 @@ import { useMapStore } from "../store/mapStore";
 
 export default function MapDisplay() {
     const mapcanvas = useRef(null);
+    const labelcanvas = useRef(null);
     const canvasContainer = useRef(null);
-    const { mapImage, layers, setSelectedProvince, mapMode, provinceData } = useMapStore()
+    const { mapImage, layers, setSelectedProvince, mapMode, provinceData, centroids, showLabels } = useMapStore()
 
     const TILE_SIZE = 512;
 
@@ -23,6 +24,7 @@ export default function MapDisplay() {
 
     // Web Workers
     const mapModeWorker = useRef(null)
+    const centroidWorker = useRef(null)
 
     const [displayedCoords, setDisplayedCoords] = useState({ x: 0, y: 0 });
 
@@ -128,6 +130,21 @@ export default function MapDisplay() {
         }
 
         ctx.restore()
+    }
+
+    function drawLabels() {
+        const canvas = labelcanvas.current;
+        const container = canvasContainer.current;
+        if (!canvas || !container) return;
+        const ctx = canvas.getContext('2d');
+        // check that container size matches canvas size and if not then fix
+        const cx = container.clientWidth;
+        const cy = container.clientHeight;
+        if (canvas.height !== cy) canvas.height = cy;
+        if (canvas.width !== cx) canvas.width = cx;
+        ctx.clearRect(0, 0, cx, cy)
+
+
     }
 
     // Canvas Drawer
@@ -310,6 +327,10 @@ export default function MapDisplay() {
                 onMouseUp={handleMouseUp}
                 onMouseLeave={handleMouseUp}
                 onWheel={handleMouseWheel}
+            />
+            <canvas
+                ref={labelcanvas}
+                style={{width: '100%', height: '100%', pointerEvents: 'none'}}
             />
             <p className='coords'>Coords: ({displayedCoords.x}, {displayedCoords.y})</p>
         </div>
