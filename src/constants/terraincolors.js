@@ -1,7 +1,7 @@
 const TERRAIN_COLORS = {
     tundra:[200, 200, 245],
     glacier:[235, 235, 235],
-    farmlands:[0, 255, 0],
+    farmland:[0, 255, 0],
     taiga:[5, 44, 10],
     sparse:[158, 188, 132],
     forest:[18, 74, 9],

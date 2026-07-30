@@ -74,8 +74,15 @@ self.onmessage = ({ data }) => {
         if (mapMode === 'area') return getHashColor(province.area || '')
         if (mapMode === 'province') return getHashColor(province.province || '')
         if (mapMode === 'isCoastal') {
+            if (province.sea_zones && province.sea_zones === 'yes') return [0,0,255]
+            if (province.lakes && province.lakes === 'yes') return [0,0,100]
             const c = province.isCoastal || province.is_coastal || province.coastal || ''
-            return (c === '1' || c.toLowerCase() === 'true' || c.toLowerCase() === 'yes') ? [70,130,180] : [139,115,85]
+            const hasPorts = province.port_x && province.port_y || province.port_seazone
+            return (c === '1' || c.toLowerCase() === 'true' || c.toLowerCase() === 'yes') ? (
+                hasPorts ? [0,255,0] : [70,130,180]
+            ) : (
+                hasPorts ? [255,255,0] : [139,115,85] // Why would it have ports???
+            )
         }
         return null
     }
