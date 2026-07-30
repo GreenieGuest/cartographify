@@ -116,4 +116,29 @@ export const useMapStore = create((set, get) => ({
   centroids: {},
   setCentroids: (centroids) => set({ centroids }),
 
+  // Province Hierarchy
+  
+  hierarchy: [],
+  addNode: (parentId, tier, name) => set((state) => {
+    const newNode = {
+      id: Date.now(), type, name, children: []
+    }
+    const updateHierarchy = (nodes) => nodes.map(
+        (n) =>
+        n.id === parentId ? {
+          ...n, children: [...(n.children || []), newNode]
+        } : {
+          ...n, children: updateHierarchy(n.children || [])
+        }
+      )
+      return { hierarchy: updateHierarchy(state.hierarchy)}
+  }),
+  removeNode: (id) => set((state) => {
+    const cleanTree = (nodes) => nodes.filter((n) => n.id !== parentId).map(
+      (n) => ({
+        ...n, children: cleanTree(n.children || [])
+      })
+    )
+    return { hierarchy: cleanTree(state.hierarchy)}
+  })
 }))

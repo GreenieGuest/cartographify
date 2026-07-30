@@ -12,6 +12,7 @@ export default function ColorDisplay({r, g, b}) {
     const key = `${r},${g},${b}`
 
     if (!provinceData[key]) return;
+    if (!centroids[key]) return;
 
     return (
         <div className='color-card'>
