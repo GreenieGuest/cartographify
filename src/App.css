@@ -47,6 +47,10 @@ header {
   color: var(--accent);
 }
 
+label {
+  font-size: small;
+}
+
 .logo {
   animation: float 3s ease-in-out infinite;
 }
@@ -125,6 +129,8 @@ canvas {
   text-align: center;
 }
 
+/* Layers Panel */
+
 .layer-setting {
   justify-content: flex-end;
   display: flex;
@@ -139,10 +145,6 @@ canvas {
 
 .alt-setting {
   width: 50px;
-}
-
-label {
-  font-size: small;
 }
 
 .layer-container {
@@ -188,10 +190,20 @@ label {
   padding: 5px;
 }
 
+/* Province Panel */
+
+.province-panel {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  padding: 5px;
+  gap: 5px;
+}
+
 .input-attribute {
   border: 2px solid var(--inside-borders);
   border-radius: 0 8px 0 8px;
-  background-color: #F4CADE;
   color: white;
   background-image: linear-gradient(var(--accent-border), black);
   padding: 1px 4px;
@@ -204,4 +216,11 @@ label {
   text-overflow: ellipsis;
   overflow: hidden;
   max-width: 100px;
+}
+
+.color-display {
+  width: 50px;
+  height: 50px;
+  border: 2px solid var(--inside-borders);
+  border-radius: 0 8px 0 8px;
 }

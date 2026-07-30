@@ -7,6 +7,9 @@ const SECTIONS = [
     'Layers'
 ]
 
+const rgbToHex = (r, g, b) => 
+  "#" + [r, g, b].map(x => x.toString(16).padStart(2, "0")).join("");
+
 // Layers Panel
 function LayersPanel() {
     const uploadMapButton = useRef(null);
@@ -75,7 +78,7 @@ function LayersPanel() {
 }
 
 function DataPanel() {
-    const { selectedProvince, provinceData, setProvinceData, headers, createProvince, updateData } = useMapStore()
+    const { selectedProvince, provinceData, setProvinceData, headers, createProvince, updateData, centroids } = useMapStore()
     const [selectedAttributes, setSelectedAttributes] = useState([]);
 
     if (headers.length < 1) return (
@@ -123,40 +126,41 @@ function DataPanel() {
 
 
     return (
-        <div className='scrollable-box'>
-            { !isRegistered ? (
-                <button onClick={()=>createProvince(r, g, b)}>Create Province</button>
-            ) : (
-                <div>
-                    <table className="province-data-table">
-                        <tbody>
-                            {h.map((header) => (
-                                <tr>
-                                    <td>
-                                        <input
-                                            value={header}
-                                            type='checkbox'
-                                            onChange={handleAttributeSelect}
-                                            checked={selectedAttributes.includes(header)}
-                                        />
-                                    </td>
-                                    <td className='input-label'>{header}</td>
-                                    <td>
-                                        <input
-                                            className='input-attribute'
-                                            value={data[header] ?? ''}
-                                            onChange={e => updateData(key, header, e.target.value)}
-                                        />
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                    <button onClick={handleCopyProvince}>Copy to All in Province</button>
-                    <button onClick={handleCopyArea}>Copy to All In Area</button>
-                    <button onClick={handleCopyRegion}>Copy to All In Region</button>
-                </div>
-            )}
+        <div className='province-panel'>
+            <div className='color-display' style={{ background: rgbToHex(r, g, b) }}></div>
+            <button onClick={handleCopyProvince}>Copy to All in Province</button>
+            <button onClick={handleCopyArea}>Copy to All In Area</button>
+            <button onClick={handleCopyRegion}>Copy to All In Region</button>
+            <div className='scrollable-box'>
+                { !isRegistered ? (
+                    <button onClick={()=>createProvince(r, g, b)}>Create Province</button>
+                ) : (
+                        <table className="province-data-table">
+                            <tbody>
+                                {h.map((header) => (
+                                    <tr>
+                                        <td>
+                                            <input
+                                                value={header}
+                                                type='checkbox'
+                                                onChange={handleAttributeSelect}
+                                                checked={selectedAttributes.includes(header)}
+                                            />
+                                        </td>
+                                        <td className='input-label'>{header}</td>
+                                        <td>
+                                            <input
+                                                className='input-attribute'
+                                                value={data[header] ?? ''}
+                                                onChange={e => updateData(key, header, e.target.value)}
+                                            />
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                )}
+            </div>
         </div>
     )
 }

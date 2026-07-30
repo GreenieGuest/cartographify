@@ -192,6 +192,13 @@ export default function MapDisplay() {
         ctx.textAlign = 'center'
         ctx.textBaseline = 'middle'
         for (const {text, labelX, labelY} of labels) {
+            ctx.font = "12px Arial";
+            ctx.fillStyle = '#000'
+            const offsets = [[-1,-1],[1,-1],[-1,1],[1,1],[0,-1],[0,1],[-1,0],[1,0]]
+            for (const [ox, oy] of offsets) {
+                ctx.fillText(text, labelX + ox, labelY + oy)
+            }
+            ctx.fillStyle = "white";
             ctx.fillText(text, labelX, labelY)
         }
     }
