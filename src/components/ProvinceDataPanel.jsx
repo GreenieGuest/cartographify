@@ -3,7 +3,7 @@ import { useMapStore } from '../store/mapStore'
 import ColorDisplay from "./ColorDisplay";
 
 export default function DataPanel() {
-    const { selectedProvince, provinceData, setProvinceData, headers, createProvince, updateData, centroids } = useMapStore()
+    const { selectedProvince, provinceData, setProvinceData, headers, createProvince, updateData, centroids, setPortActive } = useMapStore()
     const [selectedAttributes, setSelectedAttributes] = useState([]);
 
     if (headers.length < 1) return (
@@ -57,6 +57,7 @@ export default function DataPanel() {
             <button onClick={handleCopyProvince}>Copy Selected to All in Province</button>
             <button onClick={handleCopyArea}>Copy Selected to All In Area</button>
             <button onClick={handleCopyRegion}>Copy Selected to All In Region</button>
+            <button onClick={() => setPortActive(key)}>Set Port...</button>
 
             <div className='scrollable-box'>
                 { !isRegistered ? (

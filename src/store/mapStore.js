@@ -269,5 +269,10 @@ export const useMapStore = create((set, get) => ({
       })
     )
     return { hierarchy: cleanTree(state.hierarchy)}
-  })
+  }),
+
+  // Port placing
+
+  settingPortFor: null,
+  setPortActive: (province) => set({ settingPortFor: province }),
 }))

@@ -5,7 +5,8 @@ export default function MapDisplay() {
     const mapcanvas = useRef(null);
     const labelcanvas = useRef(null);
     const canvasContainer = useRef(null);
-    const { mapImage, layers, setSelectedProvince, mapMode, provinceData, centroids, setCentroids, showLabels } = useMapStore()
+    const { mapImage, layers, setSelectedProvince, mapMode, provinceData, centroids, setCentroids, showLabels,
+        setPortActive, settingPortFor, updateData } = useMapStore()
 
     const TILE_SIZE = 512;
 
@@ -352,7 +353,17 @@ export default function MapDisplay() {
         const { rx, ry } = getRectXY(e)
         const { x: ix, y: iy } = getImageCoords(rx, ry)
         const [r, g, b] = getPixelAt(ix, iy)
-        setSelectedProvince(r, g, b)
+
+        if (settingPortFor) {
+            if (!provinceData[`${r},${g},${b}`]) return;
+            console.log("Setting province port to be at " + ix + (pixelData.current.height - iy) + " on " + provinceData[`${r},${g},${b}`].name)
+            updateData(settingPortFor, 'port_x', ix)
+            updateData(settingPortFor, 'port_y', pixelData.current.height - iy) // EU5 y-coords are weird like that. Don't blame me, I'm just the messenger
+            updateData(settingPortFor, 'port_seazone', provinceData[`${r},${g},${b}`].name)
+            setPortActive(null)
+        } else {
+            setSelectedProvince(r, g, b)
+        }
     }
 
     const handleMouseUp = (e) => { isPanning.current = false }
