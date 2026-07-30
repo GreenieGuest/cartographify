@@ -3,6 +3,7 @@ import { useMapStore } from '../store/mapStore'
 import ColorDisplay from "./ColorDisplay";
 import LayersPanel from "./LayersPanel";
 import DataPanel from "./ProvinceDataPanel";
+import HierarchyPanel from "./HierarchyPanel";
 
 const SECTIONS = [
     'Data',
@@ -26,6 +27,7 @@ export default function Sidebar() {
             </div>
             <h1>{currentSection}</h1>
             {currentSection === 'Layers' && <LayersPanel />}
+            {currentSection === 'Hierarchy' && <HierarchyPanel />}
             {currentSection === 'Data' && <DataPanel />}
         </aside>
     )

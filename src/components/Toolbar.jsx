@@ -16,6 +16,7 @@ export default function Toolbar() {
         { id: 'culture', label: 'Culture'},
         { id: 'religion', label: 'Religion'},
         { id: 'harbors', label: 'Harbors'},
+        { id: 'pdensity', label: 'Pop Density'},
         //Hierarchical
         { id: 'continent', label: 'Continent'},
         { id: 'subcontinent', label: 'Subcontinent'},

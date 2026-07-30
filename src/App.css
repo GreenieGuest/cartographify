@@ -231,3 +231,17 @@ canvas {
   line-height: 20px;
   gap: 5px
 }
+
+/* hierarchy tree stuff */
+
+.hierarchy-panel {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.hierarchy-panel ul {
+  padding-left: 1rem;
+  list-style: disc;
+}

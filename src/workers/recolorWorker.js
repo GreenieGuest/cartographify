@@ -2,11 +2,11 @@ import TRADE_GOOD_COLORS from "../constants/tradegoodcolors.js"
 import CLIMATE_COLORS from "../constants/climatecolors.js"
 import TERRAIN_COLORS from "../constants/terraincolors.js"
 
-// Input: { buffer: ArrayBuffer, width, height, provinceData, mapMode }
+// Input: { buffer: ArrayBuffer, width, height, provinceData, centroids, mapMode }
 // Output: { buffer: ArrayBuffer, width, height }
 
 self.onmessage = ({ data }) => {
-    const { buffer, width, height, provinceData, mapMode } = data
+    const { buffer, width, height, provinceData, centroids, mapMode } = data
     const pixels = new Uint8ClampedArray(buffer)
     const colorCache = new Map()
 
@@ -27,9 +27,12 @@ self.onmessage = ({ data }) => {
     }
 
     // get paradox-style colors for different map modes ( very useful in all cases )
-    const getMapModeColor = (province) => {
+    const getMapModeColor = (key) => {
+        const province = provinceData[key];
+        const centroid = centroids[key];
+
         if (mapMode === 'assigned') return province ? [0,255,0] : [0,0,0]
-        if (!province) return null
+        if (!province || !centroid) return null
         if (mapMode === 'tradeGood') {
             const g = (province.tradeGood || province.grade_good || province.raw_material || '').toLowerCase()
             return TRADE_GOOD_COLORS[g] || getHashColor(g)
@@ -53,6 +56,12 @@ self.onmessage = ({ data }) => {
         if (mapMode === 'harbors') {
             const g = Number(province.natural_harbor_suitability || '')
             return (getColorOnScale(g, 0, 1))
+        }
+        if (mapMode === 'pdensity') {
+            const p = Number(province.population || '')
+            const s = Number(centroid.count || '')
+            const g = p / s
+            return (getColorOnScale(g, 0, 50))
         }
         
         if (mapMode === 'culture') return getHashColor(province.culture || '')
@@ -79,7 +88,7 @@ self.onmessage = ({ data }) => {
 
         if (!colorCache.has(key)) {
             const pKey = `${r},${g},${b}`
-            colorCache.set(key, getMapModeColor(provinceData[pKey] ?? null))
+            colorCache.set(key, getMapModeColor(pKey))
         }
 
         const c = colorCache.get(key)

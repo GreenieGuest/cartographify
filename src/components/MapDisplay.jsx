@@ -286,7 +286,7 @@ export default function MapDisplay() {
             draw()
         }
         mapModeWorker.current.postMessage(
-            { buffer: copy.buffer, width, height, provinceData, mapMode }, [copy.buffer]
+            { buffer: copy.buffer, width, height, provinceData, centroids, mapMode }, [copy.buffer]
         )
     }, [mapMode, provinceData])
 
