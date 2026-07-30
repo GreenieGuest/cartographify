@@ -84,6 +84,48 @@ export const useMapStore = create((set, get) => ({
     set({ provinceData: fullData, headers: headers })
   },
 
+  autofillHierarchy: () => {
+    const { provinceData, headers } = get();
+
+    // Go through each province and build the hierarchy from the bottom up by checking if ascending nodes already exist
+    // (Tedious but best option i can think of)
+
+    const levels = ['continent', 'subcontinent', 'region', 'area', 'province', 'location'].filter(tier => headers.includes(tier))
+
+    const newHierarchy = []
+
+    if (levels.length === 0) return
+    // loop through each province in the csv data
+    for (const province of Object.values(provinceData)) {
+      let parentId = null
+      for (const tier of levels) { // for every tier in the hierarchy
+        if (!province[tier]) break // if hierarchy incomplete skip province entirely
+        if (newHierarchy.includes(province[tier])) { // if this tier is already filed out continue
+          continue
+        } else { // this tier hasn't been done yet...
+          const newNode = {
+            id: province[tier], tier, name: province[tier], children: []
+          } // creates new node
+          if (!parentId) { // if it's the highest node then push it into the hierarchy array
+            newHierarchy.push(newNode)
+          } else { // otherwise push it into the highest done node
+            const insertInto = (hierarchyNodes) => hierarchyNodes.map(node =>
+              node.id === parentId
+              ? { ...node, children: [...node.children, newNode] }
+              : { ...node, children: insertInto(node.children || [])}
+            )
+            newHierarchy = insertInto(newHierarchy)
+          }
+        }
+        parentId = province[tier]
+      }
+    }
+
+    console.log(newHierarchy)
+
+    set({ hierarchy: newHierarchy })
+  },
+
   updateData: (key, field, value) => set((state) => ({
     provinceData: {
       ...state.provinceData,

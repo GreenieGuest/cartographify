@@ -10,7 +10,7 @@ import './App.css'
 function App() {
   const uploadMapButton = useRef(null);
   const uploadCSVButton = useRef(null);
-  const { mapImage, setMapImage, loadCSVData } = useMapStore()
+  const { mapImage, setMapImage, loadCSVData, autofillHierarchy } = useMapStore()
 
   const handleMapUpload = (e) => {
     const file = e.target.files[0];
@@ -40,6 +40,7 @@ function App() {
       reader.onload = (event) => {
         const text = event.target.result;
         loadCSVData(text);
+        autofillHierarchy();
       }
       reader.readAsText(file)
       e.target.value = ''
