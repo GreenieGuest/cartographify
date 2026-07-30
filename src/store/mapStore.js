@@ -151,6 +151,37 @@ export const useMapStore = create((set, get) => ({
     return rows.join('\n');
   },
 
+  exportDataEU5: () => {
+    const { provinceData, headers } = get();
+    if (headers.length === 0) return;
+
+    // default.map
+
+    const seaProvinces = [];
+    const lakeProvinces = [];
+    const wastelandProvinces = [];
+
+    for (const province of Object.values(provinceData)) { // for each province (row [besides headers])
+      if (province.sea_zones === 'yes') seaProvinces.push(province.location);
+      if (province.is_lake === 'yes') lakeProvinces.push(province.location);
+      if (province.impassable_mountains === 'yes') wastelandProvinces.push(province.location);
+    }
+    const lines = [
+      "### PUT THESE IN default.map ###",
+      "sea_zones = {",
+      `${seaProvinces.map(entry => '\t' + entry).join('\n')}`,
+      "}",
+      "lakes = {",
+      `${lakeProvinces.map(entry => '\t' + entry).join('\n')}`,
+      "}",
+      "impassable_mountains = {",
+      `${wastelandProvinces.map(entry => '\t' + entry).join('\n')}`,
+      "}",
+    ];
+
+    return lines.join('\n');
+  },
+
   // Mapmodes
 
   mapMode: null,
