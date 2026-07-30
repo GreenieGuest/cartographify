@@ -32,7 +32,7 @@ export default function DataExport() {
         const url = URL.createObjectURL(blob)
         const a = document.createElement('a')
         a.href = url
-        a.download = 'MapData.csv'
+        a.download = 'ExportedData.txt'
         a.click()
         URL.revokeObjectURL(url);
     }

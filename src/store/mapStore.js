@@ -152,19 +152,54 @@ export const useMapStore = create((set, get) => ({
   },
 
   exportDataEU5: () => {
-    const { provinceData, headers } = get();
+    const { provinceData, headers, hierarchy } = get();
     if (headers.length === 0) return;
 
-    // default.map
 
+    const serializeNode = (node, depth) => {
+      const indent = '\t'.repeat(depth)
+      if (node.children.length === 0) return `${indent}${node.name}`;
+
+      const children = node.children.map(child => serializeNode(child, depth+1)).join('\n')
+      return `${indent}${node.name} = {\n${children}\n${indent}}`
+    }
+
+    // default.map
     const seaProvinces = [];
     const lakeProvinces = [];
     const wastelandProvinces = [];
+    // definitions.txt
+    const hierarchyInText = hierarchy.map(root => serializeNode(root, 0)).join('\n\n');
+    // location_templates.txt
+    const locationTemplates = [];
+    const namedLocations = [];
+    const ports = [];
 
     for (const province of Object.values(provinceData)) { // for each province (row [besides headers])
       if (province.sea_zones === 'yes') seaProvinces.push(province.location);
       if (province.is_lake === 'yes') lakeProvinces.push(province.location);
       if (province.impassable_mountains === 'yes') wastelandProvinces.push(province.location);
+      if (province.port_seazone && province.port_x && province.port_y) ports.push(
+        `${province.location};${province.port_seazone};${province.port_x};${province.port_y};x`
+      );
+
+      locationTemplates.push(
+        [
+        `${province.location} = {`,
+        (province.topography ? `topography = ${province.topography}` : null),
+        (province.vegetation ? `vegetation = ${province.vegetation}` : null),
+        (province.climate ? `climate = ${province.climate}` : null),
+        (province.religion ? `religion = ${province.religion}` : null),
+        (province.culture ? `culture = swedish` : null),
+        (province.raw_material ? `raw_material = ${province.raw_material}` : null),
+        (province.natural_harbor_suitability ? `natural_harbor_suitability = ${province.natural_harbor_suitability}` : null),
+        `}`
+        ].join(' ')
+      );
+      
+      namedLocations.push(
+        `${province.location} = ${province.color.replace("#", "")}`
+      );
     }
     const lines = [
       "### PUT THESE IN default.map ###",
@@ -177,6 +212,22 @@ export const useMapStore = create((set, get) => ({
       "impassable_mountains = {",
       `${wastelandProvinces.map(entry => '\t' + entry).join('\n')}`,
       "}",
+      "",
+      "",
+      "### PUT THESE IN definitions.txt ###",
+      `${hierarchyInText}`,
+      "",
+      "",
+      "### PUT THESE IN location_templates.txt ###",
+      `${locationTemplates.join('\n')}`,
+      "",
+      "",
+      "### PUT THESE IN ports.csv ###",
+      `${ports.join('\n')}`,
+      "",
+      "",
+      "### PUT THESE IN map_data/named_locations.txt ###",
+      `${namedLocations.join('\n')}`,
     ];
 
     return lines.join('\n');
