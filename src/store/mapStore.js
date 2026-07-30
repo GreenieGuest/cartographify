@@ -5,16 +5,13 @@ function colorKey(r, g, b) {
 }
 
 function hexToRGB(code) { // allows both # and no-#
-  const c = code.replace(/^#/, "");
-  if (c.length == 6) {
-    const r = parseInt(hex.slice(0, 2), 16);
-    const g = parseInt(hex.slice(2, 4), 16);
-    const b = parseInt(hex.slice(4, 6), 16);
-  } else if (c.length == 3) {
-    const r = parseInt(hex.slice(0, 1) + hex.slice(0, 1), 16);
-    const g = parseInt(hex.slice(1, 2) + hex.slice(1, 2), 16);
-    const b = parseInt(hex.slice(2, 3) + hex.slice(2, 3), 16);
+  let c = code.replace(/^#/, "");
+  if (c.length == 3) {
+    c = c.split('').map(x => x + x).join('');
   }
+  const r = parseInt(c.slice(0, 2), 16);
+  const g = parseInt(c.slice(2, 4), 16);
+  const b = parseInt(c.slice(4, 6), 16);
 
   return [r, g, b]
 }
@@ -250,7 +247,7 @@ export const useMapStore = create((set, get) => ({
   hierarchy: [],
   addNode: (parentId, tier, name) => set((state) => {
     const newNode = {
-      id: Date.now(), type, name, children: []
+      id: Date.now(), tier, name, children: []
     }
     const updateHierarchy = (nodes) => nodes.map(
         (n) =>
@@ -263,7 +260,7 @@ export const useMapStore = create((set, get) => ({
       return { hierarchy: updateHierarchy(state.hierarchy)}
   }),
   removeNode: (id) => set((state) => {
-    const cleanTree = (nodes) => nodes.filter((n) => n.id !== parentId).map(
+    const cleanTree = (nodes) => nodes.filter((n) => n.id !== id).map(
       (n) => ({
         ...n, children: cleanTree(n.children || [])
       })

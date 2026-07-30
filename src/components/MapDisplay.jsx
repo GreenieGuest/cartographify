@@ -352,14 +352,16 @@ export default function MapDisplay() {
 
         const { rx, ry } = getRectXY(e)
         const { x: ix, y: iy } = getImageCoords(rx, ry)
-        const [r, g, b] = getPixelAt(ix, iy)
+        const pixel = getPixelAt(ix, iy)
+        if (!pixel) return
+        const [r, g, b] = pixel
 
         if (settingPortFor) {
             if (!provinceData[`${r},${g},${b}`]) return;
             console.log("Setting province port to be at " + ix + (pixelData.current.height - iy) + " on " + provinceData[`${r},${g},${b}`].name)
             updateData(settingPortFor, 'port_x', ix)
             updateData(settingPortFor, 'port_y', pixelData.current.height - iy) // EU5 y-coords are weird like that. Don't blame me, I'm just the messenger
-            updateData(settingPortFor, 'port_seazone', provinceData[`${r},${g},${b}`].name)
+            updateData(settingPortFor, 'port_seazone', provinceData[`${r},${g},${b}`].location)
             setPortActive(null)
         } else {
             setSelectedProvince(r, g, b)
