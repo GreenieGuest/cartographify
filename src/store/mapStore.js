@@ -149,6 +149,8 @@ export const useMapStore = create((set, get) => ({
   },
 
   exportDataEU5: () => {
+    // Warning! This Function is REALLY Ugly! And that's the beauty of it!
+
     const { provinceData, headers, hierarchy } = get();
     if (headers.length === 0) return;
 
@@ -171,6 +173,7 @@ export const useMapStore = create((set, get) => ({
     const locationTemplates = [];
     const namedLocations = [];
     const ports = [];
+    const localizationLines = [];
 
     for (const province of Object.values(provinceData)) { // for each province (row [besides headers])
       if (province.sea_zones === 'yes') seaProvinces.push(province.location);
@@ -196,6 +199,10 @@ export const useMapStore = create((set, get) => ({
       
       namedLocations.push(
         `${province.location} = ${province.color.replace("#", "")}`
+      );
+      
+      localizationLines.push(
+        `${province.location}: \"${province.name}\"`
       );
     }
     const lines = [
@@ -225,6 +232,10 @@ export const useMapStore = create((set, get) => ({
       "",
       "### PUT THESE IN map_data/named_locations.txt ###",
       `${namedLocations.join('\n')}`,
+      "",
+      "",
+      "### PUT THESE IN main_menu/localization/english/province_names_l_english.yml ###",
+      `${localizationLines.join('\n')}`,
     ];
 
     return lines.join('\n');
