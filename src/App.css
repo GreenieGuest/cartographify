@@ -219,8 +219,15 @@ canvas {
 }
 
 .color-display {
-  width: 50px;
-  height: 50px;
+  width: 80px;
+  height: 80px;
   border: 2px solid var(--inside-borders);
-  border-radius: 0 8px 0 8px;
+  border-radius: 0 16px 0 16px;
+}
+
+.color-card {
+  display: flex;
+  font-size: 15px;
+  line-height: 20px;
+  gap: 5px
 }

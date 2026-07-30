@@ -1,14 +1,12 @@
 import { useState, useRef } from 'react'
 import { useMapStore } from '../store/mapStore'
+import ColorDisplay from "./ColorDisplay";
 
 const SECTIONS = [
     'Data',
     'Hierarchy',
     'Layers'
 ]
-
-const rgbToHex = (r, g, b) => 
-  "#" + [r, g, b].map(x => x.toString(16).padStart(2, "0")).join("");
 
 // Layers Panel
 function LayersPanel() {
@@ -127,10 +125,12 @@ function DataPanel() {
 
     return (
         <div className='province-panel'>
-            <div className='color-display' style={{ background: rgbToHex(r, g, b) }}></div>
-            <button onClick={handleCopyProvince}>Copy to All in Province</button>
-            <button onClick={handleCopyArea}>Copy to All In Area</button>
-            <button onClick={handleCopyRegion}>Copy to All In Region</button>
+            <ColorDisplay r={r} g={g} b={b}/>
+
+            <button onClick={handleCopyProvince}>Copy Selected to All in Province</button>
+            <button onClick={handleCopyArea}>Copy Selected to All In Area</button>
+            <button onClick={handleCopyRegion}>Copy Selected to All In Region</button>
+
             <div className='scrollable-box'>
                 { !isRegistered ? (
                     <button onClick={()=>createProvince(r, g, b)}>Create Province</button>
