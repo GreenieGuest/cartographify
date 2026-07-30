@@ -92,17 +92,21 @@ export const useMapStore = create((set, get) => ({
 
     const levels = ['continent', 'subcontinent', 'region', 'area', 'province', 'location'].filter(tier => headers.includes(tier))
 
-    const newHierarchy = []
+    let newHierarchy = []
+    const alreadyDone = new Set()
 
     if (levels.length === 0) return
     // loop through each province in the csv data
+    // console.log("let's begin")
     for (const province of Object.values(provinceData)) {
       let parentId = null
       for (const tier of levels) { // for every tier in the hierarchy
+        //console.log(`checking for ${tier} ${province[tier]}`)
         if (!province[tier]) break // if hierarchy incomplete skip province entirely
-        if (newHierarchy.includes(province[tier])) { // if this tier is already filed out continue
-          continue
+        if (alreadyDone.has(province[tier])) { // if this tier is already filed out continue
+          // console.log(`${province[tier]} exists! setting as parent`)
         } else { // this tier hasn't been done yet...
+          // console.log(`${province[tier]} doesn't exist yet! let's make it`)
           const newNode = {
             id: province[tier], tier, name: province[tier], children: []
           } // creates new node
@@ -116,12 +120,13 @@ export const useMapStore = create((set, get) => ({
             )
             newHierarchy = insertInto(newHierarchy)
           }
+          alreadyDone.add(province[tier])
         }
         parentId = province[tier]
       }
     }
 
-    console.log(newHierarchy)
+    //console.log(newHierarchy)
 
     set({ hierarchy: newHierarchy })
   },
