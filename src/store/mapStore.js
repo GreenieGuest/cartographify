@@ -195,7 +195,7 @@ export const useMapStore = create((set, get) => ({
         (province.raw_material ? `raw_material = ${province.raw_material}` : null),
         (province.natural_harbor_suitability ? `natural_harbor_suitability = ${province.natural_harbor_suitability}` : null),
         `}`
-        ].join(' ')
+        ].filter(Boolean).join(' ')
       );
       
       namedLocations.push(
@@ -209,9 +209,9 @@ export const useMapStore = create((set, get) => ({
       popTemplates.push(
         [
         `${province.location} = {`,
-          ((province.population && province.culture && province.religion) ? `\tdefine_pop = \{ type = peasants size = ${province.population / 1000} culture = ${province.culture} religion = ${province.religion} \}` : null),
+          ((province.population && province.culture && province.religion) ? `\tdefine_pop = \{ type = peasants size = ${(province.population / 1000).toFixed(3)} culture = ${province.culture} religion = ${province.religion} \}` : null),
         `}`
-        ].join('\n')
+        ].filter(Boolean).join('\n')
       );
     }
     const lines = [
@@ -248,7 +248,7 @@ export const useMapStore = create((set, get) => ({
       "",
       "",
       "### PUT THESE IN main_menu/setup/start/06_pops.txt ###",
-      `${popTemplates}`,
+      `${popTemplates.join('\n')}`,
       "",
     ];
 
