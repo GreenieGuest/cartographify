@@ -174,6 +174,7 @@ export const useMapStore = create((set, get) => ({
     const namedLocations = [];
     const ports = [];
     const localizationLines = [];
+    const popTemplates = [];
 
     for (const province of Object.values(provinceData)) { // for each province (row [besides headers])
       if (province.sea_zones === 'yes') seaProvinces.push(province.location);
@@ -190,7 +191,7 @@ export const useMapStore = create((set, get) => ({
         (province.vegetation ? `vegetation = ${province.vegetation}` : null),
         (province.climate ? `climate = ${province.climate}` : null),
         (province.religion ? `religion = ${province.religion}` : null),
-        (province.culture ? `culture = swedish` : null),
+        (province.culture ? `culture = ${province.culture}` : null),
         (province.raw_material ? `raw_material = ${province.raw_material}` : null),
         (province.natural_harbor_suitability ? `natural_harbor_suitability = ${province.natural_harbor_suitability}` : null),
         `}`
@@ -203,6 +204,14 @@ export const useMapStore = create((set, get) => ({
       
       localizationLines.push(
         `${province.location}: \"${province.name}\"`
+      );
+
+      popTemplates.push(
+        [
+        `${province.location} = {`,
+          ((province.population && province.culture && province.religion) ? `\tdefine_pop = \{ type = peasants size = ${province.population / 1000} culture = ${province.culture} religion = ${province.religion} \}` : null),
+        `}`
+        ].join('\n')
       );
     }
     const lines = [
@@ -234,8 +243,13 @@ export const useMapStore = create((set, get) => ({
       `${namedLocations.join('\n')}`,
       "",
       "",
-      "### PUT THESE IN main_menu/localization/english/province_names_l_english.yml ###",
+      "### PUT THESE IN main_menu/localization/english/location_names/location_names_l_english.yml ###",
       `${localizationLines.join('\n')}`,
+      "",
+      "",
+      "### PUT THESE IN main_menu/setup/start/06_pops.txt ###",
+      `${popTemplates}`,
+      "",
     ];
 
     return lines.join('\n');
