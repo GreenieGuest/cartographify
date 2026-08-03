@@ -128,6 +128,39 @@ export const useMapStore = create((set, get) => ({
     set({ hierarchy: newHierarchy })
   },
 
+  autofillCountries: () => {
+    const { provinceData } = get();
+
+    const countries = {};
+
+    for (const province of Object.values(provinceData)) {
+      if (!province.owner || !province.tag) continue;
+
+      const tag = province.tag
+
+      if (!countries[tag]) {
+        countries[tag] = {
+          id: tag,
+          name: province.owner, // should always be  name of country if everyone's spreadsheets look like mine
+          religion: province.religion,
+          culture: province.culture,
+          capital: colorKey(province.r, province.g, province.b)
+        };
+        continue
+      }
+
+      const oldCapital = provinceData[countries[tag].capital]
+
+      if (oldCapital && province.population > oldCapital.population) {
+        existingCountry.religion = province.religion;
+        existingCountry.culture = province.culture;
+        existingCountry.capital = colorKey(province.r, province.g, province.b)
+      }
+    }
+
+    set({ countries })
+  },
+
   updateData: (key, field, value) => set((state) => ({
     provinceData: {
       ...state.provinceData,
@@ -297,4 +330,8 @@ export const useMapStore = create((set, get) => ({
 
   settingPortFor: null,
   setPortActive: (province) => set({ settingPortFor: province }),
+
+  // Countries
+  
+  countries: {},
 }))
