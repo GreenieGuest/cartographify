@@ -151,12 +151,14 @@ export const useMapStore = create((set, get) => ({
 
       const oldCapital = provinceData[countries[tag].capital]
 
-      if (oldCapital && province.population > oldCapital.population) {
-        existingCountry.religion = province.religion;
-        existingCountry.culture = province.culture;
-        existingCountry.capital = colorKey(province.r, province.g, province.b)
+      if (oldCapital && Number(province.population) > Number(oldCapital.population)) {
+        countries[tag].religion = province.religion;
+        countries[tag].culture = province.culture;
+        countries[tag].capital = colorKey(province.r, province.g, province.b)
       }
     }
+
+    console.log(countries)
 
     set({ countries })
   },

@@ -127,7 +127,6 @@ export default function MapDisplay() {
             //ctx.scale(zoom.current + layer.scale, zoom.current + layer.scale)
             ctx.drawImage(layer.img, layer.offset.x, layer.offset.y, layer.img.width * layer.scale, layer.img.height * layer.scale);
             ctx.globalAlpha = 1;
-            console.log(layer)
         }
 
         ctx.restore()
@@ -315,27 +314,22 @@ export default function MapDisplay() {
         const r = imageData.data[0];
         const g = imageData.data[1];
         const b = imageData.data[2];
-        console.log(r, g, b);
         
         return [r, g, b]
     }
 
     const getPixelAt = (x, y) => {
-        console.log(x, y)
         const imageData = pixelData.current
-        console.log(imageData)
         if (!imageData || !imageData.data) return null;
         
         // in-bounds checker
         if (x < 0 || y < 0 || x >= imageData.width || y >= imageData.height) return null
 
         const i = (y * imageData.width + x) * 4
-        console.log(i)
 
         const r = imageData.data[i];
         const g = imageData.data[i+1];
         const b = imageData.data[i+2];
-        console.log(r, g, b);
         
         return [r, g, b]
     }

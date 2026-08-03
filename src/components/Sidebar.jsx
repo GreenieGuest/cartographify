@@ -4,11 +4,13 @@ import ColorDisplay from "./ColorDisplay";
 import LayersPanel from "./LayersPanel";
 import DataPanel from "./ProvinceDataPanel";
 import HierarchyPanel from "./HierarchyPanel";
+import CountryPanel from "./CountryPanel";
 
 const SECTIONS = [
     'Data',
     'Hierarchy',
-    'Layers'
+    'Layers',
+    'Countries'
 ]
 
 export default function Sidebar() {
@@ -29,6 +31,7 @@ export default function Sidebar() {
             {currentSection === 'Layers' && <LayersPanel />}
             {currentSection === 'Hierarchy' && <HierarchyPanel />}
             {currentSection === 'Data' && <DataPanel />}
+            {currentSection === 'Countries' && <CountryPanel />}
         </aside>
     )
 }

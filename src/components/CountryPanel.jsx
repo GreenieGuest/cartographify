@@ -1,39 +1,39 @@
+import { useState } from 'react'
 import { useMapStore } from '../store/mapStore'
 
 export default function CountryPanel() {
-    const { provinceData, countries } = useMapStore()
+    const { provinceData, countries, autofillCountries } = useMapStore()
     
-    if (provinceData.length < 1) return (
+    if (Object.keys(provinceData).length < 1) return (
         <p>No Province Data, import a CSV</p>
     )
-    if (hierarchy.length < 1) return (
-        <p>No Hierarchy. Perhaps add some?</p>
+    if (Object.keys(countries).length < 1) return (
+        <div>
+            <p>No Countries. Perhaps add some?</p>
+            <button onClick={() => autofillCountries()}>Generate Tags</button>
+        </div>
     )
 
     return (
         <div className='hierarchy-panel'>
+            <button onClick={() => autofillCountries()}>Generate Tags</button>
             <div className="scrollable-box">
-            <ul>
-            {hierarchy.map((node) => (
-                <Node key={node.id} node={node}/>
+            {Object.values(countries).map((country) => (
+                <ul key={country.id}>
+                    <li>{country.id}</li>
+                    <li>{country.name}</li>
+                    <li>{country.religion}</li>
+                    <li>{country.culture}</li>
+                    <li>{provinceData[country.capital].name}</li>
+                </ul>
             ))}
-            </ul>
             </div>
         </div>
     )
 }
 
-function Node({node}) {
-    return (
-    <li>
-        {node.name}
-        {node.children.length > 0 &&
-        <ul>
-        {node.children.map((innerNode) => (
-            <Node key={innerNode.id} node={innerNode}/>
-        ))}
-        </ul>
-        }
-    </li>
-    )
+function CountryBlock() {
+    const [isOpen, setIsOpen] = useState(true)
+
+    // to do later
 }
