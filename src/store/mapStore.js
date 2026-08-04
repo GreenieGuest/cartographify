@@ -186,7 +186,7 @@ export const useMapStore = create((set, get) => ({
   exportDataEU5: () => {
     // Warning! This Function is REALLY Ugly! And that's the beauty of it!
 
-    const { provinceData, headers, hierarchy } = get();
+    const { provinceData, headers, hierarchy, countries } = get();
     if (headers.length === 0) return;
 
 
@@ -210,6 +210,10 @@ export const useMapStore = create((set, get) => ({
     const ports = [];
     const localizationLines = [];
     const popTemplates = [];
+
+    const countrySetup = [];
+    const countryStart = [];
+    const countryLocalization = [];
 
     for (const province of Object.values(provinceData)) { // for each province (row [besides headers])
       if (province.sea_zones === 'yes') seaProvinces.push(province.location);
@@ -249,6 +253,44 @@ export const useMapStore = create((set, get) => ({
         ].filter(Boolean).join('\n')
       );
     }
+
+    for (const country of Object.values(countries)) {
+      countrySetup.push(
+        [
+        `${country.id} = {`,
+        `\tcolor = map_${country.name.toLowerCase()}`,
+        `\tcolor2 = rgb { ${provinceData[country.capital].r} ${provinceData[country.capital].g} ${provinceData[country.capital].b} }`,
+
+        `\tculture_definition = ${country.culture}`,
+        `\treligion_definition = ${country.religion}`,
+        `}`,
+        ].join('\n')
+      )
+
+      countryStart.push(
+        [
+        `\t${country.id} = {`,
+        `\t\town_control_core = {`,
+        `\t\t\t${Object.keys(provinceData).filter(key => provinceData[key].tag === country.id).map(key => provinceData[key].location).join(' ')}`,
+        `\t\t}`,
+
+        `\t\tinclude = "berlogoes_polity"`,
+        `\t\tgovernment = {`,
+        `\t\t\truler = random`,
+        `\t\t}`,
+        `\t\tcapital = ${provinceData[country.capital].location}`,
+        `\t}`,
+        ].join('\n')
+      )
+
+      countryLocalization.push(
+        ` ${country.id}: \"${country.name}\"`
+      );
+      countryLocalization.push(
+        ` ${country.id}_ADJ: \"${country.name}an\"`
+      );
+    }
+
     const lines = [
       "### PUT THESE IN default.map ###",
       "sea_zones = {",
@@ -284,6 +326,19 @@ export const useMapStore = create((set, get) => ({
       "",
       "### PUT THESE IN main_menu/setup/start/06_pops.txt ###",
       `${popTemplates.join('\n')}`,
+      "",
+      "",
+      "### PUT THESE IN in_game/setup/countries ###",
+      `${countrySetup.join('\n')}`,
+      "",
+      "",
+      "### PUT THESE IN main_menu/setup/start/10_countries.txt ###",
+      `${countryStart.join('\n')}`,
+      "",
+      "",
+      "### PUT THESE IN main_menu/localization/english ###",
+      `${countryLocalization.join('\n')}`,
+      "",
       "",
     ];
 
